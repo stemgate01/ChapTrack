@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="ChapTrack - Chapter Study Tracker" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="HandheldFriendly" content="true" />
+  <title>ChapTrack | Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+Pro:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="usa-overlay" id="overlay"></div>
+
+<!-- Header (same as index.html but with Study active) -->
+<header class="usa-header" id="header">
+  <div class="usa-navbar">
+    <div class="usa-logo">
+      <a href="/index.html" style="display:flex;align-items:center;text-decoration:none;color:white;">
+        <svg viewBox="0 0 40 40" fill="none" style="width:36px;height:36px;margin-right:8px;">
+          <rect x="2" y="4" width="36" height="32" rx="3" fill="white" opacity="0.95"/>
+          <rect x="6" y="8" width="12" height="10" rx="1.5" fill="#1a2744"/>
+          <rect x="20" y="8" width="12" height="10" rx="1.5" fill="#005ea2"/>
+          <rect x="6" y="21" width="12" height="10" rx="1.5" fill="#2e8540"/>
+          <rect x="20" y="21" width="12" height="10" rx="1.5" fill="#e66f00"/>
+        </svg>
+        <span style="font-family:'Source Serif Pro',serif;font-size:1.2rem;font-weight:700;">ChapTrack</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <nav class="usa-nav">
+        <ul class="usa-nav__primary">
+          <li><a href="/index.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a></li>
+          <li><a href="/study.html" class="usa-nav__link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Study</a></li>
+          <li><a href="/targets.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Targets</a></li>
+          <li><a href="/profile.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
+        </ul>
+      </nav>
+      <div style="position:relative;">
+        <button class="notification-bell" id="notifBell" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
+        </button>
+        <div class="notification-dropdown" id="notifDropdown">
+          <div class="notification-dropdown__header"><span>Notifications</span></div>
+          <div class="notification-dropdown__list" id="notifList"></div>
+        </div>
+      </div>
+      <button class="mobile-btn" id="mobileBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+    <a href="/study.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Study</a>
+    <a href="/targets.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Targets</a>
+    <a href="/profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
+  </div>
+</header>
+
+<main class="main-content">
+
+  <!-- Page Header with Search -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
+    <h1 class="section-title" style="margin-bottom:0;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Study Tracker
+    </h1>
+    <div class="search-box" style="width:100%;max-width:360px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="form-input" type="search" id="searchInput" placeholder="Search subjects, chapters..." style="padding-left:40px;">
+    </div>
+  </div>
+
+  <!-- Search Results -->
+  <div class="card" id="searchResults" style="display:none;margin-bottom:20px;">
+    <div class="card-header">
+      <span>Search Results</span>
+      <button class="btn btn-xs btn-secondary" onclick="closeSearch()">Clear</button>
+    </div>
+    <div class="card-body" style="padding:0;" id="searchResultsBody"></div>
+  </div>
+
+  <!-- Subject Accordion List -->
+  <div id="subjectList">
+    <div class="empty-state" style="padding:48px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;opacity:0.3;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <p>Loading subjects...</p>
+    </div>
+  </div>
+
+  <!-- Chapter Detail Modal -->
+  <div class="modal-overlay" id="chapterModal">
+    <div class="modal" style="max-width:640px;">
+      <div class="modal-header">
+        <span id="chapterModalTitle">Chapter Details</span>
+        <button class="modal-close" onclick="closeModal('chapterModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="chapterModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Add Study Session Modal -->
+  <div class="modal-overlay" id="studySessionModal">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <span>Add Study Time</span>
+        <button class="modal-close" onclick="closeModal('studySessionModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="sessionChapterId">
+        <div class="form-group">
+          <label class="form-label">Chapter</label>
+          <input class="form-input" id="sessionChapterName" readonly style="background:var(--gray-100);">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Session Type</label>
+          <select class="form-select" id="sessionType">
+            <option value="study">Study</option>
+            <option value="revision">Revision</option>
+            <option value="practice">Practice</option>
+            <option value="exam">Exam</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration (minutes)</label>
+          <div class="time-input-group">
+            <input class="form-input" type="number" id="sessionDuration" value="45" min="1" max="600" style="width:100px;">
+            <span>minutes</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+            <button class="btn btn-xs btn-secondary" onclick="document.getElementById('sessionDuration').value='15'">15m</button>
+            <button class="btn btn-xs btn-secondary" onclick="document.getElementById('sessionDuration').value='30'">30m</button>
+            <button class="btn btn-xs btn-secondary" onclick="document.getElementById('sessionDuration').value='45'">45m</button>
+            <button class="btn btn-xs btn-secondary" onclick="document.getElementById('sessionDuration').value='60'">1h</button>
+            <button class="btn btn-xs btn-secondary" onclick="document.getElementById('sessionDuration').value='90'">1.5h</button>
+            <button class="btn btn-xs btn-secondary" onclick="document.getElementById('sessionDuration').value='120'">2h</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('studySessionModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="addStudySession()">Save Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Chapter Modal -->
+  <div class="modal-overlay" id="addChapterModal">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <span id="addChapterModalTitle">Add Chapter</span>
+        <button class="modal-close" onclick="closeModal('addChapterModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editChapterId">
+        <input type="hidden" id="addChapterPaperId">
+        <div class="form-group">
+          <label class="form-label">Chapter Name</label>
+          <input class="form-input" id="addChapterName" placeholder="Enter chapter name">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('addChapterModal')">Cancel</button>
+        <button class="btn btn-primary" id="saveChapterBtn" onclick="saveChapter()">Save Chapter</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="usa-footer">
+  <div class="usa-footer__primary-section">
+    <div class="usa-footer__inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 64 64" fill="none" style="width:56px;height:56px;">
+          <rect x="3" y="6" width="58" height="52" rx="4" fill="white" opacity="0.9"/>
+          <rect x="9" y="12" width="20" height="18" rx="2" fill="#1a2744"/>
+          <rect x="33" y="12" width="20" height="18" rx="2" fill="#005ea2"/>
+          <rect x="9" y="34" width="20" height="18" rx="2" fill="#2e8540"/>
+          <rect x="33" y="34" width="20" height="18" rx="2" fill="#e66f00"/>
+        </svg>
+      </div>
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>ChapTrack</h3>
+          <ul>
+            <li><a href="/index.html">Dashboard</a></li>
+            <li><a href="/study.html">Study Tracker</a></li>
+            <li><a href="/targets.html">Targets</a></li>
+            <li><a href="/profile.html">Profile & Settings</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Features</h3>
+          <ul>
+            <li><a href="/study.html">Chapter Tracking</a></li>
+            <li><a href="/targets.html">Target System</a></li>
+            <li><a href="/profile.html">Syllabus Management</a></li>
+            <li><a href="/profile.html">Data Export</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Subjects</h3>
+          <ul>
+            <li><a href="/study.html">Physics</a></li>
+            <li><a href="/study.html">Chemistry</a></li>
+            <li><a href="/study.html">Mathematics</a></li>
+            <li><a href="/study.html">Biology</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About</h3>
+          <ul>
+            <li><a href="#">Help & Documentation</a></li>
+            <li><a href="/profile.html">Backup Data</a></li>
+            <li><a href="#">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-footer__secondary-section">
+    <p>ChapTrack &mdash; Chapter-Based Personal Study Tracker. Built for HSC students.</p>
+  </div>
+  <div class="return-to-top">
+    <a href="#header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+      Return to top
+    </a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const API_BASE = '/api';
+function getToken() { return localStorage.getItem('chaptrack_token'); }
+function getUser() { try { return JSON.parse(localStorage.getItem('chaptrack_user')); } catch(e) { return null; } }
+
+const user = getUser();
+if (!user || !getToken()) { window.location.href = '/auth.html'; }
+
+function showToast(msg, type = '') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); document.getElementById('overlay').classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
+document.getElementById('overlay').addEventListener('click', () => {
+  document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('notifDropdown').classList.remove('active');
+});
+
+document.getElementById('mobileBtn').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.toggle('active');
+});
+
+// Notifications
+document.getElementById('notifBell').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('notifDropdown').classList.toggle('active');
+  if (document.getElementById('notifDropdown').classList.contains('active')) loadNotifications();
+});
+
+async function loadNotifications() {
+  try {
+    const res = await fetch(`${API_BASE}/notifications`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    const data = await res.json();
+    const badge = document.getElementById('notifBadge');
+    const unread = data.filter(n => !n.is_read).length;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+    badge.textContent = unread;
+    document.getElementById('notifList').innerHTML = data.length === 0
+      ? '<div class="empty-state" style="padding:20px;"><p style="font-size:0.8rem;">No notifications</p></div>'
+      : data.map(n => `<div class="notification-item ${n.is_read ? '' : 'unread'} ${n.is_pinned ? 'pinned' : ''}"><div class="notification-item__title">${escapeHTML(n.title)}</div></div>`).join('');
+  } catch(e) {}
+}
+
+function formatMinutes(min) {
+  if (!min || min === 0) return '0m';
+  if (min < 60) return min + 'm';
+  return Math.floor(min / 60) + 'h ' + (min % 60) + 'm';
+}
+
+function formatDate(d) {
+  if (!d) return 'N/A';
+  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function escapeHTML(s) {
+  const div = document.createElement('div');
+  div.textContent = s || '';
+  return div.innerHTML;
+}
+
+// ===== LOAD SUBJECTS WITH CHAPTERS =====
+async function loadStudyData() {
+  try {
+    const res = await fetch(`${API_BASE}/subjects`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    const subjects = await res.json();
+    const container = document.getElementById('subjectList');
+
+    if (!subjects || subjects.length === 0) {
+      container.innerHTML = `<div class="empty-state" style="padding:48px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;opacity:0.3;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <h3>No Subjects Found</h3>
+        <p>Go to Profile to add subjects and chapters to your syllabus.</p>
+        <a href="/profile.html" class="btn btn-primary">Manage Syllabus</a>
+      </div>`;
+      return;
+    }
+
+    let html = '';
+    for (const subject of subjects) {
+      const papersRes = await fetch(`${API_BASE}/papers?subject_id=${subject.id}`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+      });
+      const papers = await papersRes.json();
+
+      for (const paper of papers) {
+        const chaptersRes = await fetch(`${API_BASE}/chapters?paper_id=${paper.id}`, {
+          headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+        const chapters = await chaptersRes.json();
+
+        const startedCount = chapters.filter(c =>
+          c.online_class || c.short_notes || c.theory_understood || c.pyq_completed ||
+          c.total_study_time > 0 || c.revision_count > 0 || c.practice_count > 0 || c.exam_count > 0
+        ).length;
+        const completedCount = chapters.filter(c =>
+          c.online_class && c.short_notes && c.theory_understood && c.pyq_completed && c.revision_count >= 2
+        ).length;
+        const totalTime = chapters.reduce((s, c) => s + c.total_study_time, 0);
+
+        html += `
+          <div class="accordion" style="margin-bottom:12px;">
+            <button class="accordion__header" onclick="toggleAccordion(this, 'acc-${paper.id}')">
+              <span>
+                <span style="font-size:0.75rem;color:var(--gray-400);display:block;">${escapeHTML(subject.name)}</span>
+                ${escapeHTML(paper.name)} &mdash; ${chapters.length} chapters
+              </span>
+              <span style="display:flex;align-items:center;gap:10px;font-size:0.78rem;color:var(--gray-500);">
+                <span>${formatMinutes(totalTime)}</span>
+                <span class="badge ${completedCount === chapters.length ? 'badge-green' : startedCount > 0 ? 'badge-blue' : 'badge-gray'}">${completedCount}/${chapters.length}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </button>
+            <div class="accordion__body" id="acc-${paper.id}">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div class="progress-bar" style="flex:1;margin-right:12px;">
+                  <div class="progress-bar__fill ${completedCount === chapters.length ? 'green' : startedCount > 0 ? 'blue' : 'yellow'}" style="width:${chapters.length > 0 ? Math.round((completedCount / chapters.length) * 100) : 0}%;"></div>
+                </div>
+                <span style="font-size:0.76rem;color:var(--gray-500);white-space:nowrap;">${chapters.length > 0 ? Math.round((completedCount / chapters.length) * 100) : 0}%</span>
+              </div>
+              <div class="chapter-list">
+                ${chapters.length === 0 ? '<div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">No chapters in this paper.</p></div>' : ''}
+                ${chapters.map(c => {
+                  const progress = [
+                    c.online_class, c.short_notes, c.theory_understood, c.pyq_completed,
+                    c.revision_count > 0 ? 1 : 0, c.practice_count > 0 ? 1 : 0
+                  ].filter(Boolean).length;
+                  const maxProgress = 6;
+                  const pct = Math.round((progress / maxProgress) * 100);
+                  return `
+                  <div class="chapter-item">
+                    <div class="chapter-item__info">
+                      <div class="chapter-item__name">${escapeHTML(c.name)}</div>
+                      <div class="chapter-item__meta">
+                        ${c.total_study_time > 0 ? `<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${formatMinutes(c.total_study_time)}</span>` : ''}
+                        <span>Rev: ${c.revision_count}</span>
+                        <span>Prac: ${c.practice_count}</span>
+                        <span>Exam: ${c.exam_count}</span>
+                        ${c.last_studied_date ? `<span>Last: ${formatDate(c.last_studied_date)}</span>` : '<span style="color:var(--red);">Not studied</span>'}
+                      </div>
+                      <div style="margin-top:4px;">
+                        <span class="badge ${pct >= 80 ? 'badge-green' : pct >= 30 ? 'badge-blue' : 'badge-gray'}">${pct}%</span>
+                        ${!c.online_class ? '<span class="badge badge-gray">No Class</span>' : ''}
+                        ${!c.short_notes ? '<span class="badge badge-gray">No Notes</span>' : ''}
+                        ${!c.theory_understood ? '<span class="badge badge-gray">Theory Pending</span>' : ''}
+                        ${!c.pyq_completed ? '<span class="badge badge-gray">PYQ Pending</span>' : ''}
+                      </div>
+                    </div>
+                    <div class="chapter-item__actions">
+                      <button class="btn btn-xs btn-primary" onclick="openStudySession(${c.id}, '${escapeHTML(c.name).replace(/'/g, "\\'")}')" title="Add Study Time">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      </button>
+                      <button class="btn btn-xs btn-secondary" onclick="openChapterDetail(${c.id})" title="View Details">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      </button>
+                      <button class="btn btn-xs btn-danger" onclick="deleteChapter(${c.id})" title="Delete">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                      </button>
+                    </div>
+                  </div>`;
+                }).join('')}
+              </div>
+              <div style="margin-top:12px;text-align:right;">
+                <button class="btn btn-sm btn-secondary" onclick="openAddChapter(${paper.id})">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Chapter
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+    container.innerHTML = html;
+  } catch(e) {
+    console.error('Load study data error:', e);
+    document.getElementById('subjectList').innerHTML = `<div class="empty-state"><p>Failed to load data. Please try again.</p></div>`;
+  }
+}
+
+function toggleAccordion(header, bodyId) {
+  header.classList.toggle('open');
+  document.getElementById(bodyId).classList.toggle('open');
+}
+
+// ===== STUDY SESSION =====
+function openStudySession(chapterId, chapterName) {
+  document.getElementById('sessionChapterId').value = chapterId;
+  document.getElementById('sessionChapterName').value = chapterName;
+  document.getElementById('sessionDuration').value = '45';
+  document.getElementById('sessionType').value = 'study';
+  openModal('studySessionModal');
+}
+
+async function addStudySession() {
+  const chapterId = parseInt(document.getElementById('sessionChapterId').value);
+  const duration = parseInt(document.getElementById('sessionDuration').value);
+  const sessionType = document.getElementById('sessionType').value;
+
+  if (!duration || duration < 1) return showToast('Enter valid duration', 'error');
+
+  try {
+    await fetch(`${API_BASE}/sessions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+      body: JSON.stringify({ chapter_id: chapterId, duration_minutes: duration, session_type: sessionType })
+    });
+    closeModal('studySessionModal');
+    showToast(`Added ${duration}min ${sessionType} session`, 'success');
+    loadStudyData();
+  } catch(e) {
+    showToast('Failed to save session', 'error');
+  }
+}
+
+// ===== CHAPTER DETAIL =====
+async function openChapterDetail(chapterId) {
+  try {
+    const res = await fetch(`${API_BASE}/chapters/${chapterId}`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    const chapter = await res.json();
+    
+    document.getElementById('chapterModalTitle').textContent = chapter.name;
+    document.getElementById('chapterModalBody').innerHTML = `
+      <div class="chapter-detail-grid" style="margin-bottom:20px;">
+        <div class="chapter-detail-item">
+          <div class="chapter-detail-item__value">${formatMinutes(chapter.total_study_time)}</div>
+          <div class="chapter-detail-item__label">Total Study Time</div>
+        </div>
+        <div class="chapter-detail-item">
+          <div class="chapter-detail-item__value">${chapter.revision_count}</div>
+          <div class="chapter-detail-item__label">Revisions</div>
+        </div>
+        <div class="chapter-detail-item">
+          <div class="chapter-detail-item__value">${chapter.practice_count}</div>
+          <div class="chapter-detail-item__label">Practice</div>
+        </div>
+        <div class="chapter-detail-item">
+          <div class="chapter-detail-item__value">${chapter.exam_count}</div>
+          <div class="chapter-detail-item__label">Exams</div>
+        </div>
+      </div>
+
+      <h3 class="section-subtitle">Completion Status</h3>
+      <div style="margin-bottom:16px;">
+        <div class="toggle-row">
+          <label>Online Class Completed</label>
+          <label class="toggle-switch">
+            <input type="checkbox" ${chapter.online_class ? 'checked' : ''} onchange="toggleChapterField(${chapter.id}, 'online_class', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <label>Short Notes Completed</label>
+          <label class="toggle-switch">
+            <input type="checkbox" ${chapter.short_notes ? 'checked' : ''} onchange="toggleChapterField(${chapter.id}, 'short_notes', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <label>Theory Understood</label>
+          <label class="toggle-switch">
+            <input type="checkbox" ${chapter.theory_understood ? 'checked' : ''} onchange="toggleChapterField(${chapter.id}, 'theory_understood', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="toggle-row">
+          <label>PYQ Completed</label>
+          <label class="toggle-switch">
+            <input type="checkbox" ${chapter.pyq_completed ? 'checked' : ''} onchange="toggleChapterField(${chapter.id}, 'pyq_completed', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <h3 class="section-subtitle">Dates</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.85rem;margin-bottom:16px;">
+        <div><strong>Last Studied:</strong> ${formatDate(chapter.last_studied_date)}</div>
+        <div><strong>Last Revised:</strong> ${formatDate(chapter.last_revised_date)}</div>
+        <div><strong>Last Practiced:</strong> ${formatDate(chapter.last_practiced_date)}</div>
+        <div><strong>Last Exam:</strong> ${formatDate(chapter.last_exam_date)}</div>
+      </div>
+
+      <h3 class="section-subtitle">Personal Notes</h3>
+      <textarea class="form-textarea" id="chapterNotes" placeholder="Add notes for this chapter..." onblur="saveChapterNotes(${chapter.id})">${escapeHTML(chapter.notes || '')}</textarea>
+
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary btn-sm" onclick="closeModal('chapterModal');openStudySession(${chapter.id}, '${escapeHTML(chapter.name).replace(/'/g, "\\'")}')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Add Study Time
+        </button>
+      </div>
+    `;
+    openModal('chapterModal');
+  } catch(e) {
+    showToast('Failed to load chapter', 'error');
+  }
+}
+
+async function toggleChapterField(chapterId, field, value) {
+  try {
+    await fetch(`${API_BASE}/chapters/${chapterId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+      body: JSON.stringify({ [field]: value ? 1 : 0 })
+    });
+    showToast('Updated', 'success');
+  } catch(e) {
+    showToast('Failed to update', 'error');
+  }
+}
+
+async function saveChapterNotes(chapterId) {
+  const notes = document.getElementById('chapterNotes').value;
+  try {
+    await fetch(`${API_BASE}/chapters/${chapterId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+      body: JSON.stringify({ notes })
+    });
+  } catch(e) {}
+}
+
+// ===== CHAPTER CRUD =====
+function openAddChapter(paperId) {
+  document.getElementById('addChapterPaperId').value = paperId;
+  document.getElementById('editChapterId').value = '';
+  document.getElementById('addChapterName').value = '';
+  document.getElementById('addChapterModalTitle').textContent = 'Add Chapter';
+  document.getElementById('saveChapterBtn').textContent = 'Save Chapter';
+  openModal('addChapterModal');
+}
+
+async function saveChapter() {
+  const paperId = parseInt(document.getElementById('addChapterPaperId').value);
+  const name = document.getElementById('addChapterName').value.trim();
+  const editId = document.getElementById('editChapterId').value;
+
+  if (!name) return showToast('Chapter name required', 'error');
+
+  try {
+    if (editId) {
+      await fetch(`${API_BASE}/chapters/${editId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+        body: JSON.stringify({ name, paper_id: paperId })
+      });
+    } else {
+      await fetch(`${API_BASE}/chapters`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+        body: JSON.stringify({ paper_id: paperId, name })
+      });
+    }
+    closeModal('addChapterModal');
+    showToast(editId ? 'Chapter updated' : 'Chapter added', 'success');
+    loadStudyData();
+  } catch(e) {
+    showToast('Failed to save chapter', 'error');
+  }
+}
+
+async function deleteChapter(chapterId) {
+  if (!confirm('Delete this chapter? All study data for it will be lost.')) return;
+  try {
+    await fetch(`${API_BASE}/chapters/${chapterId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    showToast('Chapter deleted', 'success');
+    loadStudyData();
+  } catch(e) {
+    showToast('Failed to delete', 'error');
+  }
+}
+
+// ===== SEARCH =====
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', function() {
+  clearTimeout(searchTimeout);
+  const q = this.value.trim();
+  if (q.length < 2) {
+    document.getElementById('searchResults').style.display = 'none';
+    return;
+  }
+  searchTimeout = setTimeout(() => doSearch(q), 300);
+});
+
+async function doSearch(q) {
+  try {
+    const res = await fetch(`${API_BASE}/search?q=${encodeURIComponent(q)}`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    const data = await res.json();
+    const container = document.getElementById('searchResults');
+    const body = document.getElementById('searchResultsBody');
+
+    if (data.chapters.length === 0 && data.subjects.length === 0) {
+      body.innerHTML = '<div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">No results found</p></div>';
+    } else {
+      body.innerHTML = `
+        ${data.subjects.length > 0 ? `<div style="padding:12px 16px;font-weight:600;font-size:0.82rem;color:var(--gray-500);">Subjects</div>` : ''}
+        ${data.subjects.map(s => `<div class="chapter-item"><div class="chapter-item__name">${escapeHTML(s.name)}</div></div>`).join('')}
+        ${data.chapters.length > 0 ? `<div style="padding:12px 16px;font-weight:600;font-size:0.82rem;color:var(--gray-500);">Chapters</div>` : ''}
+        ${data.chapters.map(c => `
+          <div class="chapter-item">
+            <div class="chapter-item__info">
+              <div class="chapter-item__name">${escapeHTML(c.name)}</div>
+              <div class="chapter-item__meta">${escapeHTML(c.subject_name)} &rsaquo; ${escapeHTML(c.paper_name)}</div>
+            </div>
+            <button class="btn btn-xs btn-primary" onclick="openStudySession(${c.id}, '${escapeHTML(c.name).replace(/'/g, "\\'")}')">Study</button>
+          </div>
+        `).join('')}
+      `;
+    }
+    container.style.display = 'block';
+  } catch(e) {}
+}
+
+function closeSearch() {
+  document.getElementById('searchResults').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+}
+
+// ===== INIT =====
+loadStudyData();
+loadNotifications();
+</script>
+</body>
+</html>
