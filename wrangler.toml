@@ -1,0 +1,8 @@
+name = "chaptrack"
+compatibility_date = "2024-07-25"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "chap-db"
+database_id = "cb1a3d2b-2cfe-415c-bad5-c65e6108d1d3"
