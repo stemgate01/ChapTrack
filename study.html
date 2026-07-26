@@ -16,7 +16,6 @@
 
 <div class="usa-overlay" id="overlay"></div>
 
-<!-- Header (same as index.html but with Study active) -->
 <header class="usa-header" id="header">
   <div class="usa-navbar">
     <div class="usa-logo">
@@ -65,7 +64,6 @@
 
 <main class="main-content">
 
-  <!-- Page Header with Search -->
   <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:20px;">
     <h1 class="section-title" style="margin-bottom:0;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -77,7 +75,6 @@
     </div>
   </div>
 
-  <!-- Search Results -->
   <div class="card" id="searchResults" style="display:none;margin-bottom:20px;">
     <div class="card-header">
       <span>Search Results</span>
@@ -86,7 +83,6 @@
     <div class="card-body" style="padding:0;" id="searchResultsBody"></div>
   </div>
 
-  <!-- Subject Accordion List -->
   <div id="subjectList">
     <div class="empty-state" style="padding:48px;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;opacity:0.3;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
@@ -96,7 +92,7 @@
 
   <!-- Chapter Detail Modal -->
   <div class="modal-overlay" id="chapterModal">
-    <div class="modal" style="max-width:640px;">
+    <div class="modal" style="max-width:680px;">
       <div class="modal-header">
         <span id="chapterModalTitle">Chapter Details</span>
         <button class="modal-close" onclick="closeModal('chapterModal')">
@@ -195,38 +191,19 @@
       <div class="footer-grid">
         <div class="footer-column">
           <h3>ChapTrack</h3>
-          <ul>
-            <li><a href="/index.html">Dashboard</a></li>
-            <li><a href="/study.html">Study Tracker</a></li>
-            <li><a href="/targets.html">Targets</a></li>
-            <li><a href="/profile.html">Profile & Settings</a></li>
-          </ul>
+          <ul><li><a href="/index.html">Dashboard</a></li><li><a href="/study.html">Study Tracker</a></li><li><a href="/targets.html">Targets</a></li><li><a href="/profile.html">Profile</a></li></ul>
         </div>
         <div class="footer-column">
           <h3>Features</h3>
-          <ul>
-            <li><a href="/study.html">Chapter Tracking</a></li>
-            <li><a href="/targets.html">Target System</a></li>
-            <li><a href="/profile.html">Syllabus Management</a></li>
-            <li><a href="/profile.html">Data Export</a></li>
-          </ul>
+          <ul><li><a href="/study.html">Chapter Tracking</a></li><li><a href="/targets.html">Target System</a></li><li><a href="/profile.html">Syllabus Management</a></li><li><a href="/profile.html">Data Export</a></li></ul>
         </div>
         <div class="footer-column">
           <h3>Subjects</h3>
-          <ul>
-            <li><a href="/study.html">Physics</a></li>
-            <li><a href="/study.html">Chemistry</a></li>
-            <li><a href="/study.html">Mathematics</a></li>
-            <li><a href="/study.html">Biology</a></li>
-          </ul>
+          <ul><li><a href="/study.html">Physics</a></li><li><a href="/study.html">Chemistry</a></li><li><a href="/study.html">Mathematics</a></li><li><a href="/study.html">Biology</a></li></ul>
         </div>
         <div class="footer-column">
           <h3>About</h3>
-          <ul>
-            <li><a href="#">Help & Documentation</a></li>
-            <li><a href="/profile.html">Backup Data</a></li>
-            <li><a href="#">Privacy</a></li>
-          </ul>
+          <ul><li><a href="#">Help</a></li><li><a href="/profile.html">Backup</a></li><li><a href="#">Privacy</a></li></ul>
         </div>
       </div>
     </div>
@@ -235,10 +212,7 @@
     <p>ChapTrack &mdash; Chapter-Based Personal Study Tracker. Built for HSC students.</p>
   </div>
   <div class="return-to-top">
-    <a href="#header">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
-      Return to top
-    </a>
+    <a href="#header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg> Return to top</a>
   </div>
 </footer>
 
@@ -269,11 +243,8 @@ document.getElementById('overlay').addEventListener('click', () => {
   document.getElementById('notifDropdown').classList.remove('active');
 });
 
-document.getElementById('mobileBtn').addEventListener('click', () => {
-  document.getElementById('mobileMenu').classList.toggle('active');
-});
+document.getElementById('mobileBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('active'));
 
-// Notifications
 document.getElementById('notifBell').addEventListener('click', (e) => {
   e.stopPropagation();
   document.getElementById('notifDropdown').classList.toggle('active');
@@ -282,9 +253,7 @@ document.getElementById('notifBell').addEventListener('click', (e) => {
 
 async function loadNotifications() {
   try {
-    const res = await fetch(`${API_BASE}/notifications`, {
-      headers: { 'Authorization': `Bearer ${getToken()}` }
-    });
+    const res = await fetch(`${API_BASE}/notifications`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
     const data = await res.json();
     const badge = document.getElementById('notifBadge');
     const unread = data.filter(n => !n.is_read).length;
@@ -313,12 +282,15 @@ function escapeHTML(s) {
   return div.innerHTML;
 }
 
-// ===== LOAD SUBJECTS WITH CHAPTERS =====
+function toggleAccordion(header, bodyId) {
+  header.classList.toggle('open');
+  document.getElementById(bodyId).classList.toggle('open');
+}
+
+// ===== OPTIMIZED PARALLEL LOADING =====
 async function loadStudyData() {
   try {
-    const res = await fetch(`${API_BASE}/subjects`, {
-      headers: { 'Authorization': `Bearer ${getToken()}` }
-    });
+    const res = await fetch(`${API_BASE}/subjects`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
     const subjects = await res.json();
     const container = document.getElementById('subjectList');
 
@@ -332,111 +304,122 @@ async function loadStudyData() {
       return;
     }
 
-    let html = '';
-    for (const subject of subjects) {
-      const papersRes = await fetch(`${API_BASE}/papers?subject_id=${subject.id}`, {
+    // Step 1: Fetch ALL papers for ALL subjects IN PARALLEL
+    const paperPromises = subjects.map(subject =>
+      fetch(`${API_BASE}/papers?subject_id=${subject.id}`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
-      });
-      const papers = await papersRes.json();
+      }).then(r => r.json()).then(papers => ({ subject, papers }))
+    );
+    const subjectPapers = await Promise.all(paperPromises);
 
-      for (const paper of papers) {
-        const chaptersRes = await fetch(`${API_BASE}/chapters?paper_id=${paper.id}`, {
-          headers: { 'Authorization': `Bearer ${getToken()}` }
-        });
-        const chapters = await chaptersRes.json();
+    // Step 2: Collect all papers and fetch ALL chapters IN PARALLEL
+    const allPaperData = [];
+    for (const sp of subjectPapers) {
+      for (const paper of sp.papers) {
+        allPaperData.push({ paper, subject: sp.subject });
+      }
+    }
 
-        const startedCount = chapters.filter(c =>
-          c.online_class || c.short_notes || c.theory_understood || c.pyq_completed ||
-          c.total_study_time > 0 || c.revision_count > 0 || c.practice_count > 0 || c.exam_count > 0
-        ).length;
-        const completedCount = chapters.filter(c =>
-          c.online_class && c.short_notes && c.theory_understood && c.pyq_completed && c.revision_count >= 2
-        ).length;
-        const totalTime = chapters.reduce((s, c) => s + c.total_study_time, 0);
+    const chapterPromises = allPaperData.map(pd =>
+      fetch(`${API_BASE}/chapters?paper_id=${pd.paper.id}`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+      }).then(r => r.json()).then(chapters => ({ ...pd, chapters }))
+    );
+    const paperChapters = await Promise.all(chapterPromises);
 
-        html += `
-          <div class="accordion" style="margin-bottom:12px;">
-            <button class="accordion__header" onclick="toggleAccordion(this, 'acc-${paper.id}')">
-              <span>
-                <span style="font-size:0.75rem;color:var(--gray-400);display:block;">${escapeHTML(subject.name)}</span>
-                ${escapeHTML(paper.name)} &mdash; ${chapters.length} chapters
-              </span>
-              <span style="display:flex;align-items:center;gap:10px;font-size:0.78rem;color:var(--gray-500);">
-                <span>${formatMinutes(totalTime)}</span>
-                <span class="badge ${completedCount === chapters.length ? 'badge-green' : startedCount > 0 ? 'badge-blue' : 'badge-gray'}">${completedCount}/${chapters.length}</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-              </span>
-            </button>
-            <div class="accordion__body" id="acc-${paper.id}">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <div class="progress-bar" style="flex:1;margin-right:12px;">
-                  <div class="progress-bar__fill ${completedCount === chapters.length ? 'green' : startedCount > 0 ? 'blue' : 'yellow'}" style="width:${chapters.length > 0 ? Math.round((completedCount / chapters.length) * 100) : 0}%;"></div>
-                </div>
-                <span style="font-size:0.76rem;color:var(--gray-500);white-space:nowrap;">${chapters.length > 0 ? Math.round((completedCount / chapters.length) * 100) : 0}%</span>
+    // Step 3: Build HTML from already-loaded data (fast, no more fetches)
+    let html = '';
+    for (const pc of paperChapters) {
+      const chapters = pc.chapters;
+      const subject = pc.subject;
+      const paper = pc.paper;
+
+      const startedCount = chapters.filter(c =>
+        c.online_class || c.short_notes || c.theory_understood || c.pyq_completed ||
+        c.total_study_time > 0 || c.revision_count > 0 || c.practice_count > 0 || c.exam_count > 0
+      ).length;
+      const completedCount = chapters.filter(c =>
+        c.online_class && c.short_notes && c.theory_understood && c.pyq_completed && c.revision_count >= 2
+      ).length;
+      const totalTime = chapters.reduce((s, c) => s + c.total_study_time, 0);
+      const completionPct = chapters.length > 0 ? Math.round((completedCount / chapters.length) * 100) : 0;
+
+      html += `
+        <div class="accordion" style="margin-bottom:12px;">
+          <button class="accordion__header" onclick="toggleAccordion(this, 'acc-${paper.id}')">
+            <span>
+              <span style="font-size:0.75rem;color:var(--gray-400);display:block;">${escapeHTML(subject.name)}</span>
+              ${escapeHTML(paper.name)} &mdash; ${chapters.length} chapters
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;font-size:0.78rem;color:var(--gray-500);">
+              <span>${formatMinutes(totalTime)}</span>
+              <span class="badge ${completedCount === chapters.length ? 'badge-green' : startedCount > 0 ? 'badge-blue' : 'badge-gray'}">${completedCount}/${chapters.length}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </button>
+          <div class="accordion__body" id="acc-${paper.id}">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <div class="progress-bar" style="flex:1;margin-right:12px;">
+                <div class="progress-bar__fill ${completionPct >= 80 ? 'green' : completionPct >= 40 ? 'blue' : 'yellow'}" style="width:${completionPct}%;"></div>
               </div>
-              <div class="chapter-list">
-                ${chapters.length === 0 ? '<div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">No chapters in this paper.</p></div>' : ''}
-                ${chapters.map(c => {
-                  const progress = [
-                    c.online_class, c.short_notes, c.theory_understood, c.pyq_completed,
-                    c.revision_count > 0 ? 1 : 0, c.practice_count > 0 ? 1 : 0
-                  ].filter(Boolean).length;
-                  const maxProgress = 6;
-                  const pct = Math.round((progress / maxProgress) * 100);
-                  return `
-                  <div class="chapter-item">
-                    <div class="chapter-item__info">
-                      <div class="chapter-item__name">${escapeHTML(c.name)}</div>
-                      <div class="chapter-item__meta">
-                        ${c.total_study_time > 0 ? `<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${formatMinutes(c.total_study_time)}</span>` : ''}
-                        <span>Rev: ${c.revision_count}</span>
-                        <span>Prac: ${c.practice_count}</span>
-                        <span>Exam: ${c.exam_count}</span>
-                        ${c.last_studied_date ? `<span>Last: ${formatDate(c.last_studied_date)}</span>` : '<span style="color:var(--red);">Not studied</span>'}
-                      </div>
-                      <div style="margin-top:4px;">
-                        <span class="badge ${pct >= 80 ? 'badge-green' : pct >= 30 ? 'badge-blue' : 'badge-gray'}">${pct}%</span>
-                        ${!c.online_class ? '<span class="badge badge-gray">No Class</span>' : ''}
-                        ${!c.short_notes ? '<span class="badge badge-gray">No Notes</span>' : ''}
-                        ${!c.theory_understood ? '<span class="badge badge-gray">Theory Pending</span>' : ''}
-                        ${!c.pyq_completed ? '<span class="badge badge-gray">PYQ Pending</span>' : ''}
-                      </div>
+              <span style="font-size:0.76rem;color:var(--gray-500);white-space:nowrap;">${completionPct}%</span>
+            </div>
+            <div class="chapter-list">
+              ${chapters.length === 0 ? '<div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">No chapters in this paper.</p></div>' : ''}
+              ${chapters.map(c => {
+                const progress = [
+                  c.online_class, c.short_notes, c.theory_understood, c.pyq_completed,
+                  c.revision_count > 0 ? 1 : 0, c.practice_count > 0 ? 1 : 0
+                ].filter(Boolean).length;
+                const pct = Math.round((progress / 6) * 100);
+                return `
+                <div class="chapter-item">
+                  <div class="chapter-item__info">
+                    <div class="chapter-item__name">${escapeHTML(c.name)}</div>
+                    <div class="chapter-item__meta">
+                      ${c.total_study_time > 0 ? `<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;vertical-align:middle;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> ${formatMinutes(c.total_study_time)}</span>` : ''}
+                      <span>Rev: ${c.revision_count}</span>
+                      <span>Prac: ${c.practice_count}</span>
+                      <span>Exam: ${c.exam_count}</span>
+                      ${c.last_studied_date ? `<span>Last: ${formatDate(c.last_studied_date)}</span>` : '<span style="color:var(--red);">Not studied</span>'}
                     </div>
-                    <div class="chapter-item__actions">
-                      <button class="btn btn-xs btn-primary" onclick="openStudySession(${c.id}, '${escapeHTML(c.name).replace(/'/g, "\\'")}')" title="Add Study Time">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                      </button>
-                      <button class="btn btn-xs btn-secondary" onclick="openChapterDetail(${c.id})" title="View Details">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                      </button>
-                      <button class="btn btn-xs btn-danger" onclick="deleteChapter(${c.id})" title="Delete">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                      </button>
+                    <div style="margin-top:4px;">
+                      <span class="badge ${pct >= 80 ? 'badge-green' : pct >= 30 ? 'badge-blue' : 'badge-gray'}">${pct}%</span>
+                      ${!c.online_class ? '<span class="badge badge-gray">No Class</span>' : ''}
+                      ${!c.short_notes ? '<span class="badge badge-gray">No Notes</span>' : ''}
+                      ${!c.theory_understood ? '<span class="badge badge-gray">Theory Pending</span>' : ''}
+                      ${!c.pyq_completed ? '<span class="badge badge-gray">PYQ Pending</span>' : ''}
                     </div>
-                  </div>`;
-                }).join('')}
-              </div>
-              <div style="margin-top:12px;text-align:right;">
-                <button class="btn btn-sm btn-secondary" onclick="openAddChapter(${paper.id})">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                  Add Chapter
-                </button>
-              </div>
+                  </div>
+                  <div class="chapter-item__actions">
+                    <button class="btn btn-xs btn-primary" onclick="openStudySession(${c.id}, '${escapeHTML(c.name).replace(/'/g, "\\'")}')" title="Add Study Time">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </button>
+                    <button class="btn btn-xs btn-secondary" onclick="openChapterDetail(${c.id})" title="View Details">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                    <button class="btn btn-xs btn-danger" onclick="deleteChapter(${c.id})" title="Delete">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
+                  </div>
+                </div>`;
+              }).join('')}
+            </div>
+            <div style="margin-top:12px;text-align:right;">
+              <button class="btn btn-sm btn-secondary" onclick="openAddChapter(${paper.id})">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Chapter
+              </button>
             </div>
           </div>
-        `;
-      }
+        </div>
+      `;
     }
     container.innerHTML = html;
   } catch(e) {
     console.error('Load study data error:', e);
     document.getElementById('subjectList').innerHTML = `<div class="empty-state"><p>Failed to load data. Please try again.</p></div>`;
   }
-}
-
-function toggleAccordion(header, bodyId) {
-  header.classList.toggle('open');
-  document.getElementById(bodyId).classList.toggle('open');
 }
 
 // ===== STUDY SESSION =====
@@ -469,19 +452,21 @@ async function addStudySession() {
   }
 }
 
-// ===== CHAPTER DETAIL =====
+// ===== CHAPTER DETAIL WITH MANUAL CORRECTION & SESSION HISTORY =====
 async function openChapterDetail(chapterId) {
   try {
-    const res = await fetch(`${API_BASE}/chapters/${chapterId}`, {
-      headers: { 'Authorization': `Bearer ${getToken()}` }
-    });
-    const chapter = await res.json();
+    const [chapterRes, sessionsRes] = await Promise.all([
+      fetch(`${API_BASE}/chapters/${chapterId}`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
+      fetch(`${API_BASE}/sessions?chapter_id=${chapterId}`, { headers: { 'Authorization': `Bearer ${getToken()}` } })
+    ]);
+    const chapter = await chapterRes.json();
+    const sessions = await sessionsRes.json();
     
     document.getElementById('chapterModalTitle').textContent = chapter.name;
     document.getElementById('chapterModalBody').innerHTML = `
       <div class="chapter-detail-grid" style="margin-bottom:20px;">
         <div class="chapter-detail-item">
-          <div class="chapter-detail-item__value">${formatMinutes(chapter.total_study_time)}</div>
+          <div class="chapter-detail-item__value" id="detailTotalTime">${formatMinutes(chapter.total_study_time)}</div>
           <div class="chapter-detail-item__label">Total Study Time</div>
         </div>
         <div class="chapter-detail-item">
@@ -497,6 +482,31 @@ async function openChapterDetail(chapterId) {
           <div class="chapter-detail-item__label">Exams</div>
         </div>
       </div>
+
+      <h3 class="section-subtitle">Manual Correction</h3>
+      <p style="font-size:0.78rem;color:var(--gray-500);margin-bottom:8px;">Fix accidental entries. Override calculated values.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" style="font-size:0.76rem;">Total Study Time (min)</label>
+          <input class="form-input" type="number" id="correctTime" value="${chapter.total_study_time}" style="font-size:0.84rem;">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" style="font-size:0.76rem;">Revision Count</label>
+          <input class="form-input" type="number" id="correctRev" value="${chapter.revision_count}" style="font-size:0.84rem;">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" style="font-size:0.76rem;">Practice Count</label>
+          <input class="form-input" type="number" id="correctPrac" value="${chapter.practice_count}" style="font-size:0.84rem;">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" style="font-size:0.76rem;">Exam Count</label>
+          <input class="form-input" type="number" id="correctExam" value="${chapter.exam_count}" style="font-size:0.84rem;">
+        </div>
+      </div>
+      <button class="btn btn-sm btn-secondary" onclick="applyCorrection(${chapter.id})" style="margin-bottom:16px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Apply Correction
+      </button>
 
       <h3 class="section-subtitle">Completion Status</h3>
       <div style="margin-bottom:16px;">
@@ -530,6 +540,29 @@ async function openChapterDetail(chapterId) {
         </div>
       </div>
 
+      <h3 class="section-subtitle">Study History</h3>
+      ${sessions.length === 0 ? '<p style="font-size:0.84rem;color:var(--gray-400);">No sessions recorded</p>' : `
+        <div class="table-wrapper" style="margin-bottom:12px;">
+          <table>
+            <thead><tr><th>Date</th><th>Type</th><th>Duration</th><th></th></tr></thead>
+            <tbody>
+              ${sessions.map(s => `
+                <tr>
+                  <td style="font-size:0.8rem;">${formatDate(s.session_date)}</td>
+                  <td><span class="badge ${s.session_type === 'revision' ? 'badge-blue' : s.session_type === 'practice' ? 'badge-green' : s.session_type === 'exam' ? 'badge-red' : 'badge-gray'}">${s.session_type}</span></td>
+                  <td>${s.duration_minutes} min</td>
+                  <td>
+                    <button class="btn btn-xs btn-danger" onclick="deleteSession(${s.id}, ${chapter.id})" title="Delete this session">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                    </button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `}
+
       <h3 class="section-subtitle">Dates</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.85rem;margin-bottom:16px;">
         <div><strong>Last Studied:</strong> ${formatDate(chapter.last_studied_date)}</div>
@@ -551,6 +584,41 @@ async function openChapterDetail(chapterId) {
     openModal('chapterModal');
   } catch(e) {
     showToast('Failed to load chapter', 'error');
+  }
+}
+
+async function applyCorrection(chapterId) {
+  const total_study_time = parseInt(document.getElementById('correctTime').value) || 0;
+  const revision_count = parseInt(document.getElementById('correctRev').value) || 0;
+  const practice_count = parseInt(document.getElementById('correctPrac').value) || 0;
+  const exam_count = parseInt(document.getElementById('correctExam').value) || 0;
+
+  try {
+    await fetch(`${API_BASE}/chapters/${chapterId}/correct`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+      body: JSON.stringify({ total_study_time, revision_count, practice_count, exam_count })
+    });
+    showToast('Correction applied', 'success');
+    document.getElementById('detailTotalTime').textContent = formatMinutes(total_study_time);
+    loadStudyData();
+  } catch(e) {
+    showToast('Failed to apply correction', 'error');
+  }
+}
+
+async function deleteSession(sessionId, chapterId) {
+  if (!confirm('Delete this study session? Chapter totals will be recalculated.')) return;
+  try {
+    await fetch(`${API_BASE}/sessions/${sessionId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    showToast('Session deleted. Stats recalculated.', 'success');
+    openChapterDetail(chapterId);
+    loadStudyData();
+  } catch(e) {
+    showToast('Failed to delete session', 'error');
   }
 }
 
