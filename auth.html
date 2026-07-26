@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="ChapTrack - Personal Chapter-Based Study Tracker for HSC Students" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="HandheldFriendly" content="true" />
+  <title>ChapTrack | Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+Pro:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--gray-100);
+    }
+    .auth-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+    .auth-card {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+    }
+    .auth-card__header {
+      background: var(--navy);
+      padding: 32px 32px 24px;
+      text-align: center;
+    }
+    .auth-card__header svg {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 12px;
+    }
+    .auth-card__header h1 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.3px;
+    }
+    .auth-card__header p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.88rem;
+      margin-top: 4px;
+    }
+    .auth-card__body {
+      padding: 32px;
+    }
+    .auth-card__footer {
+      padding: 16px 32px;
+      border-top: 1px solid var(--gray-200);
+      text-align: center;
+      background: var(--gray-100);
+    }
+    .auth-card__footer a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+    .auth-card__footer a:hover {
+      text-decoration: underline;
+    }
+    .auth-error {
+      background: #fde7e7;
+      color: var(--red);
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: 0.84rem;
+      margin-bottom: 16px;
+      display: none;
+      border: 1px solid #f5c6c6;
+    }
+    .auth-error.visible {
+      display: block;
+    }
+    .password-hint {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-card__header">
+        <svg viewBox="0 0 64 64" fill="none">
+          <rect x="4" y="8" width="56" height="48" rx="4" fill="white" stroke="white" stroke-width="1.5"/>
+          <rect x="10" y="14" width="18" height="16" rx="2" fill="#1a2744"/>
+          <rect x="32" y="14" width="18" height="16" rx="2" fill="#005ea2"/>
+          <rect x="10" y="34" width="18" height="16" rx="2" fill="#2e8540"/>
+          <rect x="32" y="34" width="18" height="16" rx="2" fill="#e66f00"/>
+          <line x1="19" y1="20" x2="19" y2="28" stroke="white" stroke-width="1.2"/>
+          <line x1="15" y1="24" x2="23" y2="24" stroke="white" stroke-width="1.2"/>
+          <line x1="41" y1="20" x2="41" y2="28" stroke="white" stroke-width="1.5"/>
+          <line x1="37" y1="24" x2="45" y2="24" stroke="white" stroke-width="1.5"/>
+          <line x1="19" y1="40" x2="19" y2="48" stroke="white" stroke-width="1.2"/>
+          <line x1="15" y1="44" x2="23" y2="44" stroke="white" stroke-width="1.2"/>
+          <rect x="36" y="38" width="10" height="8" rx="2" fill="white"/>
+        </svg>
+        <h1>ChapTrack</h1>
+        <p>Chapter-Based Study Tracker</p>
+      </div>
+      <div class="auth-card__body">
+        <div class="auth-error" id="authError"></div>
+        
+        <!-- Login Form -->
+        <form id="loginForm">
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">Email Address</label>
+            <input class="form-input" type="email" id="loginEmail" placeholder="your@email.com" autocomplete="email" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input class="form-input" type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </button>
+        </form>
+
+        <!-- Register Form (hidden by default) -->
+        <form id="registerForm" style="display:none;">
+          <div class="form-group">
+            <label class="form-label" for="registerEmail">Email Address</label>
+            <input class="form-input" type="email" id="registerEmail" placeholder="your@email.com" autocomplete="email" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="registerPassword">Create Password</label>
+            <input class="form-input" type="password" id="registerPassword" placeholder="Min 4 characters" autocomplete="new-password" required minlength="4">
+            <p class="password-hint">Must be at least 4 characters</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="registerConfirm">Confirm Password</label>
+            <input class="form-input" type="password" id="registerConfirm" placeholder="Re-enter password" autocomplete="new-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+            Create Account
+          </button>
+        </form>
+      </div>
+      <div class="auth-card__footer">
+        <span id="toggleText">Don't have an account?</span>
+        <a href="#" id="toggleAuth">Create one</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = '/api';
+    let isLogin = true;
+
+    function showError(msg) {
+      const el = document.getElementById('authError');
+      el.textContent = msg;
+      el.classList.add('visible');
+      setTimeout(() => el.classList.remove('visible'), 5000);
+    }
+
+    document.getElementById('toggleAuth').addEventListener('click', function(e) {
+      e.preventDefault();
+      isLogin = !isLogin;
+      document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+      document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+      document.getElementById('toggleText').textContent = isLogin ? "Don't have an account?" : "Already have an account?";
+      document.getElementById('toggleAuth').textContent = isLogin ? 'Create one' : 'Sign in';
+      document.getElementById('authError').classList.remove('visible');
+      document.querySelector('.auth-card__header p').textContent = isLogin ? 'Chapter-Based Study Tracker' : 'Create Your Account';
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        
+        localStorage.setItem('chaptrack_user', JSON.stringify({ id: data.user_id, email: data.email }));
+        localStorage.setItem('chaptrack_token', data.user_id.toString());
+        window.location.href = '/index.html';
+      } catch (err) {
+        showError(err.message);
+      }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const confirm = document.getElementById('registerConfirm').value;
+
+      if (password !== confirm) return showError('Passwords do not match');
+      if (password.length < 4) return showError('Password must be at least 4 characters');
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Registration failed');
+
+        localStorage.setItem('chaptrack_user', JSON.stringify({ id: data.user_id, email: data.email }));
+        localStorage.setItem('chaptrack_token', data.user_id.toString());
+        window.location.href = '/index.html';
+      } catch (err) {
+        showError(err.message);
+      }
+    });
+
+    // Check if already logged in
+    const saved = localStorage.getItem('chaptrack_user');
+    if (saved) {
+      try {
+        const user = JSON.parse(saved);
+        if (user.id) window.location.href = '/index.html';
+      } catch(e) {}
+    }
+  </script>
+</body>
+</html>
