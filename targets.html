@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="ChapTrack - Target Tracker" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="HandheldFriendly" content="true" />
+  <title>ChapTrack | Targets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+Pro:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="usa-overlay" id="overlay"></div>
+
+<header class="usa-header" id="header">
+  <div class="usa-navbar">
+    <div class="usa-logo">
+      <a href="/index.html" style="display:flex;align-items:center;text-decoration:none;color:white;">
+        <svg viewBox="0 0 40 40" fill="none" style="width:36px;height:36px;margin-right:8px;">
+          <rect x="2" y="4" width="36" height="32" rx="3" fill="white" opacity="0.95"/>
+          <rect x="6" y="8" width="12" height="10" rx="1.5" fill="#1a2744"/>
+          <rect x="20" y="8" width="12" height="10" rx="1.5" fill="#005ea2"/>
+          <rect x="6" y="21" width="12" height="10" rx="1.5" fill="#2e8540"/>
+          <rect x="20" y="21" width="12" height="10" rx="1.5" fill="#e66f00"/>
+        </svg>
+        <span style="font-family:'Source Serif Pro',serif;font-size:1.2rem;font-weight:700;">ChapTrack</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <nav class="usa-nav">
+        <ul class="usa-nav__primary">
+          <li><a href="/index.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a></li>
+          <li><a href="/study.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Study</a></li>
+          <li><a href="/targets.html" class="usa-nav__link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Targets</a></li>
+          <li><a href="/profile.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
+        </ul>
+      </nav>
+      <div style="position:relative;">
+        <button class="notification-bell" id="notifBell" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
+        </button>
+        <div class="notification-dropdown" id="notifDropdown">
+          <div class="notification-dropdown__header"><span>Notifications</span></div>
+          <div class="notification-dropdown__list" id="notifList"></div>
+        </div>
+      </div>
+      <button class="mobile-btn" id="mobileBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+    <a href="/study.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Study</a>
+    <a href="/targets.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Targets</a>
+    <a href="/profile.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
+  </div>
+</header>
+
+<main class="main-content">
+
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <h1 class="section-title" style="margin-bottom:0;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      Target Tracker
+    </h1>
+    <button class="btn btn-primary" onclick="openAddTarget()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Target
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-grid" style="margin-bottom:20px;">
+    <div class="stat-card blue">
+      <div class="stat-card__value" id="statTotal">0</div>
+      <div class="stat-card__label">Total Targets</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-card__value" id="statCompleted">0</div>
+      <div class="stat-card__label">Completed</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-card__value" id="statPending">0</div>
+      <div class="stat-card__label">Pending</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-card__value" id="statMissed">0</div>
+      <div class="stat-card__label">Missed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__value" id="statRate">0%</div>
+      <div class="stat-card__label">Completion Rate</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" style="margin-bottom:16px;">
+    <button class="tab active" onclick="filterTargets('all', this)">All</button>
+    <button class="tab" onclick="filterTargets('Pending', this)">Pending</button>
+    <button class="tab" onclick="filterTargets('Completed', this)">Completed</button>
+    <button class="tab" onclick="filterTargets('Missed', this)">Missed</button>
+  </div>
+
+  <!-- Targets List -->
+  <div id="targetsList">
+    <div class="empty-state" style="padding:48px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;opacity:0.3;"><circle cx="12" cy="12" r="10"/></svg>
+      <p>Loading targets...</p>
+    </div>
+  </div>
+
+  <!-- Add/Edit Target Modal -->
+  <div class="modal-overlay" id="targetModal">
+    <div class="modal" style="max-width:520px;">
+      <div class="modal-header">
+        <span id="targetModalTitle">New Target</span>
+        <button class="modal-close" onclick="closeModal('targetModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editTargetId">
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input class="form-input" id="targetTitle" placeholder="What do you want to achieve?">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject</label>
+          <select class="form-select" id="targetSubject">
+            <option value="">None (General Target)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Chapter (optional)</label>
+          <select class="form-select" id="targetChapter">
+            <option value="">None</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Type</label>
+          <select class="form-select" id="targetType">
+            <option value="Study Time">Study Time</option>
+            <option value="Theory">Theory</option>
+            <option value="Revision">Revision</option>
+            <option value="Practice">Practice</option>
+            <option value="Exam">Exam</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Due Date</label>
+          <input class="form-input" type="date" id="targetDueDate">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('targetModal')">Cancel</button>
+        <button class="btn btn-primary" id="saveTargetBtn" onclick="saveTarget()">Save Target</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="usa-footer">
+  <div class="usa-footer__primary-section">
+    <div class="usa-footer__inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 64 64" fill="none" style="width:56px;height:56px;">
+          <rect x="3" y="6" width="58" height="52" rx="4" fill="white" opacity="0.9"/>
+          <rect x="9" y="12" width="20" height="18" rx="2" fill="#1a2744"/>
+          <rect x="33" y="12" width="20" height="18" rx="2" fill="#005ea2"/>
+          <rect x="9" y="34" width="20" height="18" rx="2" fill="#2e8540"/>
+          <rect x="33" y="34" width="20" height="18" rx="2" fill="#e66f00"/>
+        </svg>
+      </div>
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>ChapTrack</h3>
+          <ul><li><a href="/index.html">Dashboard</a></li><li><a href="/study.html">Study Tracker</a></li><li><a href="/targets.html">Targets</a></li><li><a href="/profile.html">Profile</a></li></ul>
+        </div>
+        <div class="footer-column">
+          <h3>Features</h3>
+          <ul><li><a href="/study.html">Chapter Tracking</a></li><li><a href="/targets.html">Target System</a></li><li><a href="/profile.html">Syllabus</a></li><li><a href="/profile.html">Export</a></li></ul>
+        </div>
+        <div class="footer-column">
+          <h3>Subjects</h3>
+          <ul><li><a href="/study.html">Physics</a></li><li><a href="/study.html">Chemistry</a></li><li><a href="/study.html">Mathematics</a></li><li><a href="/study.html">Biology</a></li></ul>
+        </div>
+        <div class="footer-column">
+          <h3>About</h3>
+          <ul><li><a href="#">Help</a></li><li><a href="/profile.html">Backup</a></li><li><a href="#">Privacy</a></li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-footer__secondary-section">
+    <p>ChapTrack &mdash; Chapter-Based Personal Study Tracker. Built for HSC students.</p>
+  </div>
+  <div class="return-to-top">
+    <a href="#header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg> Return to top</a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const API_BASE = '/api';
+function getToken() { return localStorage.getItem('chaptrack_token'); }
+function getUser() { try { return JSON.parse(localStorage.getItem('chaptrack_user')); } catch(e) { return null; } }
+
+const user = getUser();
+if (!user || !getToken()) { window.location.href = '/auth.html'; }
+
+function showToast(msg, type = '') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); document.getElementById('overlay').classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
+document.getElementById('overlay').addEventListener('click', () => {
+  document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('notifDropdown').classList.remove('active');
+});
+
+document.getElementById('mobileBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('active'));
+
+document.getElementById('notifBell').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('notifDropdown').classList.toggle('active');
+  if (document.getElementById('notifDropdown').classList.contains('active')) loadNotifications();
+});
+
+async function loadNotifications() {
+  try {
+    const res = await fetch(`${API_BASE}/notifications`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    const data = await res.json();
+    const badge = document.getElementById('notifBadge');
+    const unread = data.filter(n => !n.is_read).length;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+    badge.textContent = unread;
+    document.getElementById('notifList').innerHTML = data.length === 0
+      ? '<div class="empty-state" style="padding:20px;"><p style="font-size:0.8rem;">No notifications</p></div>'
+      : data.map(n => `<div class="notification-item ${n.is_read ? '' : 'unread'}"><div class="notification-item__title">${escapeHTML(n.title)}</div></div>`).join('');
+  } catch(e) {}
+}
+
+function escapeHTML(s) { const div = document.createElement('div'); div.textContent = s || ''; return div.innerHTML; }
+function formatDate(d) { if (!d) return ''; return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+
+let allTargets = [];
+let currentFilter = 'all';
+
+async function loadTargets() {
+  try {
+    const res = await fetch(`${API_BASE}/targets`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    allTargets = await res.json();
+    renderTargets();
+
+    const total = allTargets.length;
+    const completed = allTargets.filter(t => t.status === 'Completed').length;
+    const pending = allTargets.filter(t => t.status === 'Pending').length;
+    const missed = allTargets.filter(t => t.status === 'Missed').length;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statCompleted').textContent = completed;
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statMissed').textContent = missed;
+    document.getElementById('statRate').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
+  } catch(e) {
+    document.getElementById('targetsList').innerHTML = '<div class="empty-state"><p>Failed to load targets</p></div>';
+  }
+}
+
+function renderTargets() {
+  const filtered = currentFilter === 'all' ? allTargets : allTargets.filter(t => t.status === currentFilter);
+  const container = document.getElementById('targetsList');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:48px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;opacity:0.3;"><circle cx="12" cy="12" r="10"/></svg>
+      <h3>No ${currentFilter === 'all' ? '' : currentFilter.toLowerCase()} targets</h3>
+      <p>${currentFilter === 'all' ? 'Create your first target to start tracking goals.' : ''}</p>
+      ${currentFilter === 'all' ? '<button class="btn btn-primary" onclick="openAddTarget()">Create Target</button>' : ''}
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(t => {
+    const statusBadge = t.status === 'Completed' ? 'badge-green' : t.status === 'Missed' ? 'badge-red' : 'badge-yellow';
+    const isOverdue = t.status === 'Pending' && t.due_date && new Date(t.due_date) < new Date();
+    return `
+      <div class="card" style="margin-bottom:10px;border-left:4px solid ${t.status === 'Completed' ? 'var(--green)' : t.status === 'Missed' ? 'var(--red)' : isOverdue ? 'var(--red)' : 'var(--blue)'};">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;flex-wrap:wrap;gap:8px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:0.92rem;color:var(--gray-800);margin-bottom:2px;">${escapeHTML(t.title)}</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.76rem;color:var(--gray-500);">
+              ${t.subject_name ? `<span>${escapeHTML(t.subject_name)}</span>` : ''}
+              ${t.chapter_name ? `<span>&rsaquo; ${escapeHTML(t.chapter_name)}</span>` : ''}
+              <span class="tag">${escapeHTML(t.type)}</span>
+              ${t.due_date ? `<span style="${isOverdue ? 'color:var(--red);font-weight:600;' : ''}">Due: ${formatDate(t.due_date)}</span>` : '<span>No due date</span>'}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+            <span class="badge ${statusBadge}">${t.status}</span>
+            <select style="font-size:0.76rem;padding:4px 8px;border-radius:4px;border:1px solid var(--gray-300);" onchange="updateTargetStatus(${t.id}, this.value)" value="${t.status}">
+              <option value="Pending" ${t.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Completed" ${t.status === 'Completed' ? 'selected' : ''}>Completed</option>
+              <option value="Missed" ${t.status === 'Missed' ? 'selected' : ''}>Missed</option>
+            </select>
+            <button class="btn btn-xs btn-danger" onclick="deleteTarget(${t.id})" title="Delete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function filterTargets(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderTargets();
+}
+
+async function openAddTarget() {
+  document.getElementById('editTargetId').value = '';
+  document.getElementById('targetTitle').value = '';
+  document.getElementById('targetDueDate').value = '';
+  document.getElementById('targetType').value = 'Study Time';
+  document.getElementById('targetModalTitle').textContent = 'New Target';
+  document.getElementById('saveTargetBtn').textContent = 'Save Target';
+
+  // Load subjects
+  try {
+    const res = await fetch(`${API_BASE}/subjects`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    const subjects = await res.json();
+    document.getElementById('targetSubject').innerHTML = '<option value="">None (General Target)</option>' + subjects.map(s => `<option value="${s.id}">${escapeHTML(s.name)}</option>`).join('');
+    document.getElementById('targetChapter').innerHTML = '<option value="">None</option>';
+  } catch(e) {}
+
+  openModal('targetModal');
+}
+
+// Load chapters when subject changes
+document.getElementById('targetSubject').addEventListener('change', async function() {
+  const subjectId = this.value;
+  const chapterSelect = document.getElementById('targetChapter');
+  if (!subjectId) {
+    chapterSelect.innerHTML = '<option value="">None</option>';
+    return;
+  }
+  try {
+    const papersRes = await fetch(`${API_BASE}/papers?subject_id=${subjectId}`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    const papers = await papersRes.json();
+    let chapters = [];
+    for (const paper of papers) {
+      const chRes = await fetch(`${API_BASE}/chapters?paper_id=${paper.id}`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+      const chs = await chRes.json();
+      chapters = chapters.concat(chs);
+    }
+    chapterSelect.innerHTML = '<option value="">None</option>' + chapters.map(c => `<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('');
+  } catch(e) {}
+});
+
+async function saveTarget() {
+  const id = document.getElementById('editTargetId').value;
+  const title = document.getElementById('targetTitle').value.trim();
+  const subject_id = document.getElementById('targetSubject').value;
+  const chapter_id = document.getElementById('targetChapter').value;
+  const type = document.getElementById('targetType').value;
+  const due_date = document.getElementById('targetDueDate').value;
+
+  if (!title) return showToast('Title is required', 'error');
+
+  const body = { title, subject_id: subject_id || null, chapter_id: chapter_id || null, type, due_date: due_date || null };
+
+  try {
+    if (id) {
+      await fetch(`${API_BASE}/targets/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify({ status: body.status }) });
+    }
+    await fetch(`${API_BASE}/targets`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify(body) });
+    closeModal('targetModal');
+    showToast('Target saved', 'success');
+    loadTargets();
+  } catch(e) {
+    showToast('Failed to save target', 'error');
+  }
+}
+
+async function updateTargetStatus(id, status) {
+  try {
+    await fetch(`${API_BASE}/targets/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify({ status }) });
+    loadTargets();
+    showToast('Status updated', 'success');
+  } catch(e) {
+    showToast('Failed to update', 'error');
+  }
+}
+
+async function deleteTarget(id) {
+  if (!confirm('Delete this target?')) return;
+  try {
+    await fetch(`${API_BASE}/targets/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${getToken()}` } });
+    showToast('Target deleted', 'success');
+    loadTargets();
+  } catch(e) {
+    showToast('Failed to delete', 'error');
+  }
+}
+
+loadTargets();
+loadNotifications();
+</script>
+</body>
+</html>
