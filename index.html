@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="ChapTrack - Personal Chapter-Based Study Tracker Dashboard" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="HandheldFriendly" content="true" />
+  <title>ChapTrack | Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+Pro:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Overlay -->
+<div class="usa-overlay" id="overlay"></div>
+
+<!-- Header -->
+<header class="usa-header" id="header">
+  <div class="usa-navbar">
+    <div class="usa-logo">
+      <a href="/index.html" class="usa-logo__text" style="display:flex;align-items:center;text-decoration:none;color:white;">
+        <svg viewBox="0 0 40 40" fill="none" style="width:36px;height:36px;margin-right:8px;">
+          <rect x="2" y="4" width="36" height="32" rx="3" fill="white" opacity="0.95"/>
+          <rect x="6" y="8" width="12" height="10" rx="1.5" fill="#1a2744"/>
+          <rect x="20" y="8" width="12" height="10" rx="1.5" fill="#005ea2"/>
+          <rect x="6" y="21" width="12" height="10" rx="1.5" fill="#2e8540"/>
+          <rect x="20" y="21" width="12" height="10" rx="1.5" fill="#e66f00"/>
+        </svg>
+        ChapTrack
+      </a>
+    </div>
+
+    <div class="header-right">
+      <nav class="usa-nav">
+        <ul class="usa-nav__primary">
+          <li><a href="/index.html" class="usa-nav__link active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </a></li>
+          <li><a href="/study.html" class="usa-nav__link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Study
+          </a></li>
+          <li><a href="/targets.html" class="usa-nav__link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            Targets
+          </a></li>
+          <li><a href="/profile.html" class="usa-nav__link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile
+          </a></li>
+        </ul>
+      </nav>
+
+      <!-- Notification Bell -->
+      <div style="position:relative;">
+        <button class="notification-bell" id="notifBell" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
+        </button>
+        <div class="notification-dropdown" id="notifDropdown">
+          <div class="notification-dropdown__header">
+            <span>Notifications</span>
+            <button class="btn btn-xs btn-secondary" id="addNotifBtn">+ Add</button>
+          </div>
+          <div class="notification-dropdown__list" id="notifList">
+            <div class="empty-state" style="padding:24px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:36px;height:36px;opacity:0.3;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+              <p style="font-size:0.84rem;">No notifications</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="mobile-btn" id="mobileBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/index.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a href="/study.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Study
+    </a>
+    <a href="/targets.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+      Targets
+    </a>
+    <a href="/profile.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </a>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-content" id="mainContent">
+
+  <!-- Welcome Section -->
+  <div style="margin-bottom:24px;">
+    <h1 class="section-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </h1>
+    <p style="color:var(--gray-500);font-size:0.9rem;" id="welcomeMsg">Loading...</p>
+  </div>
+
+  <!-- Stat Cards Row -->
+  <div class="stat-grid" id="statCards">
+    <div class="stat-card blue">
+      <div class="stat-card__value" id="statToday">0m</div>
+      <div class="stat-card__label">Today's Study Time</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__value" id="statWeek">0h</div>
+      <div class="stat-card__label">This Week</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-card__value" id="statMonth">0h</div>
+      <div class="stat-card__label">This Month</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-card__value" id="statCompletion">0%</div>
+      <div class="stat-card__label">Syllabus Completion</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-card__value" id="statPending">0</div>
+      <div class="stat-card__label">Pending Targets</div>
+    </div>
+  </div>
+
+  <!-- Charts & Progress Row -->
+  <div class="grid-2" style="margin-bottom:24px;">
+    <!-- Weekly Study Trend -->
+    <div class="card">
+      <div class="card-header">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Study Time Trend (7 Days)
+        </span>
+      </div>
+      <div class="card-body">
+        <div id="studyChart" style="display:flex;align-items:flex-end;gap:8px;height:160px;padding-top:8px;">
+          <div class="empty-state" style="padding:32px;width:100%;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;opacity:0.3;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <p style="font-size:0.84rem;">No study data yet</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subject Progress -->
+    <div class="card">
+      <div class="card-header">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Subject Progress
+        </span>
+      </div>
+      <div class="card-body" id="subjectProgress">
+        <div class="empty-state" style="padding:24px;">
+          <p style="font-size:0.84rem;">Loading subjects...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Smart Insights Row -->
+  <div class="grid-2" style="margin-bottom:24px;">
+    <!-- Least Studied Chapters -->
+    <div class="card">
+      <div class="card-header">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><polyline points="6 9 12 15 18 9"/></svg>
+          Least Studied Chapters
+        </span>
+        <span class="badge badge-red">Needs Attention</span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <ul class="insight-list" id="leastStudied">
+          <li><div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">Loading...</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Never Studied -->
+    <div class="card">
+      <div class="card-header">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Never Studied
+        </span>
+        <span class="badge badge-red">Urgent</span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <ul class="insight-list" id="neverStudied">
+          <li><div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">Loading...</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- More Insights -->
+  <div class="grid-2" style="margin-bottom:24px;">
+    <!-- Least Revised -->
+    <div class="card">
+      <div class="card-header">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          Least Revised Chapters
+        </span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <ul class="insight-list" id="leastRevised">
+          <li><div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">Loading...</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Not Studied Recently -->
+    <div class="card">
+      <div class="card-header">
+        <span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Not Studied in 7+ Days
+        </span>
+        <span class="badge badge-yellow" id="notStudied7dBadge">-</span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <ul class="insight-list" id="notStudiedRecent">
+          <li><div class="empty-state" style="padding:20px;"><p style="font-size:0.82rem;">Loading...</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-header">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Recent Study Activity
+      </span>
+    </div>
+    <div class="card-body" style="padding:0;" id="recentActivity">
+      <div class="empty-state" style="padding:24px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;opacity:0.3;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <p style="font-size:0.84rem;">No study sessions recorded yet</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Targets -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-header">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:8px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        Upcoming Targets
+      </span>
+      <a href="/targets.html" class="btn btn-sm btn-secondary">View All</a>
+    </div>
+    <div class="card-body" style="padding:0;" id="upcomingTargets">
+      <div class="empty-state" style="padding:24px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;opacity:0.3;"><circle cx="12" cy="12" r="10"/></svg>
+        <p style="font-size:0.84rem;">No upcoming targets</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Add Study Time Modal -->
+  <div class="modal-overlay" id="quickStudyModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>Quick Add Study Time</span>
+        <button class="modal-close" onclick="closeModal('quickStudyModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" id="quickStudyBody">
+        <p style="font-size:0.9rem;color:var(--gray-500);">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Notification Modal -->
+  <div class="modal-overlay" id="addNotifModal">
+    <div class="modal">
+      <div class="modal-header">
+        <span>Add Reminder</span>
+        <button class="modal-close" onclick="closeModal('addNotifModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input class="form-input" id="notifTitle" placeholder="Reminder title">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message (optional)</label>
+          <textarea class="form-textarea" id="notifMessage" placeholder="Details..." rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Scheduled Date (optional)</label>
+          <input class="form-input" type="date" id="notifDate">
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <input type="checkbox" id="notifPinned"> Pin this reminder
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('addNotifModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="addNotification()">Save Reminder</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="usa-footer">
+  <div class="usa-footer__primary-section">
+    <div class="usa-footer__inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 64 64" fill="none" style="width:56px;height:56px;">
+          <rect x="3" y="6" width="58" height="52" rx="4" fill="white" opacity="0.9"/>
+          <rect x="9" y="12" width="20" height="18" rx="2" fill="#1a2744"/>
+          <rect x="33" y="12" width="20" height="18" rx="2" fill="#005ea2"/>
+          <rect x="9" y="34" width="20" height="18" rx="2" fill="#2e8540"/>
+          <rect x="33" y="34" width="20" height="18" rx="2" fill="#e66f00"/>
+        </svg>
+      </div>
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>ChapTrack</h3>
+          <ul>
+            <li><a href="/index.html">Dashboard</a></li>
+            <li><a href="/study.html">Study Tracker</a></li>
+            <li><a href="/targets.html">Targets</a></li>
+            <li><a href="/profile.html">Profile & Settings</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Features</h3>
+          <ul>
+            <li><a href="/study.html">Chapter Tracking</a></li>
+            <li><a href="/targets.html">Target System</a></li>
+            <li><a href="/profile.html">Syllabus Management</a></li>
+            <li><a href="/profile.html">Data Export</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Subjects</h3>
+          <ul>
+            <li><a href="/study.html">Physics</a></li>
+            <li><a href="/study.html">Chemistry</a></li>
+            <li><a href="/study.html">Mathematics</a></li>
+            <li><a href="/study.html">Biology</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>About</h3>
+          <ul>
+            <li><a href="#">Help & Documentation</a></li>
+            <li><a href="/profile.html">Backup Data</a></li>
+            <li><a href="#">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-footer__secondary-section">
+    <p>ChapTrack &mdash; Chapter-Based Personal Study Tracker. Built for HSC students.</p>
+  </div>
+  <div class="return-to-top">
+    <a href="#header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+      Return to top
+    </a>
+  </div>
+</footer>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ===== INITIALIZATION =====
+const API_BASE = '/api';
+
+function getToken() {
+  return localStorage.getItem('chaptrack_token');
+}
+
+function getUser() {
+  try {
+    return JSON.parse(localStorage.getItem('chaptrack_user'));
+  } catch(e) { return null; }
+}
+
+// Check auth
+const user = getUser();
+if (!user || !getToken()) {
+  window.location.href = '/auth.html';
+}
+
+// Set welcome message
+document.getElementById('welcomeMsg').textContent = 'Welcome back, ' + (user ? user.email : 'Student');
+
+// ===== TOAST =====
+function showToast(msg, type = '') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+// ===== MODALS =====
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.getElementById('overlay').classList.add('active');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}
+document.getElementById('overlay').addEventListener('click', () => {
+  document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('notifDropdown').classList.remove('active');
+});
+
+// ===== MOBILE MENU =====
+document.getElementById('mobileBtn').addEventListener('click', () => {
+  document.getElementById('mobileMenu').classList.toggle('active');
+});
+
+// ===== NOTIFICATIONS =====
+document.getElementById('notifBell').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('notifDropdown').classList.toggle('active');
+  if (document.getElementById('notifDropdown').classList.contains('active')) {
+    loadNotifications();
+  }
+});
+
+document.getElementById('addNotifBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  openModal('addNotifModal');
+});
+
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('notifDropdown');
+  const bell = document.getElementById('notifBell');
+  if (!dropdown.contains(e.target) && !bell.contains(e.target)) {
+    dropdown.classList.remove('active');
+  }
+});
+
+async function loadNotifications() {
+  try {
+    const res = await fetch(`${API_BASE}/notifications`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    const data = await res.json();
+    const list = document.getElementById('notifList');
+    const badge = document.getElementById('notifBadge');
+    
+    const unread = data.filter(n => !n.is_read).length;
+    if (unread > 0) {
+      badge.style.display = 'flex';
+      badge.textContent = unread;
+    } else {
+      badge.style.display = 'none';
+    }
+
+    if (data.length === 0) {
+      list.innerHTML = `<div class="empty-state" style="padding:24px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:36px;height:36px;opacity:0.3;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+        <p style="font-size:0.84rem;">No notifications</p>
+      </div>`;
+      return;
+    }
+
+    list.innerHTML = data.map(n => `
+      <div class="notification-item ${n.is_read ? '' : 'unread'} ${n.is_pinned ? 'pinned' : ''}" onclick="markNotifRead(${n.id})">
+        <div class="notification-item__title">${n.is_pinned ? '<span style="color:#e66f00;">📌</span> ' : ''}${escapeHTML(n.title)}</div>
+        ${n.message ? `<div class="notification-item__message">${escapeHTML(n.message)}</div>` : ''}
+        <div class="notification-item__time">${n.scheduled_at ? 'Scheduled: ' + n.scheduled_at : formatDate(n.created_at)}</div>
+      </div>
+    `).join('');
+  } catch(e) {
+    console.error('Notifications error:', e);
+  }
+}
+
+async function markNotifRead(id) {
+  try {
+    await fetch(`${API_BASE}/notifications/${id}/read`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    loadNotifications();
+  } catch(e) {}
+}
+
+async function addNotification() {
+  const title = document.getElementById('notifTitle').value.trim();
+  const message = document.getElementById('notifMessage').value.trim();
+  const scheduled_at = document.getElementById('notifDate').value;
+  const is_pinned = document.getElementById('notifPinned').checked;
+
+  if (!title) return showToast('Please enter a title', 'error');
+
+  try {
+    await fetch(`${API_BASE}/notifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` },
+      body: JSON.stringify({ title, message, scheduled_at: scheduled_at || null, is_pinned })
+    });
+    closeModal('addNotifModal');
+    document.getElementById('notifTitle').value = '';
+    document.getElementById('notifMessage').value = '';
+    document.getElementById('notifDate').value = '';
+    document.getElementById('notifPinned').checked = false;
+    showToast('Reminder added', 'success');
+    loadNotifications();
+  } catch(e) {
+    showToast('Failed to add reminder', 'error');
+  }
+}
+
+// ===== DASHBOARD DATA =====
+async function loadDashboard() {
+  try {
+    const [dashRes, insightsRes, subjectsRes, sessionsRes, targetsRes] = await Promise.all([
+      fetch(`${API_BASE}/dashboard`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
+      fetch(`${API_BASE}/insights`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
+      fetch(`${API_BASE}/subjects`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
+      fetch(`${API_BASE}/sessions`, { headers: { 'Authorization': `Bearer ${getToken()}` } }),
+      fetch(`${API_BASE}/targets`, { headers: { 'Authorization': `Bearer ${getToken()}` } })
+    ]);
+
+    const dashboard = await dashRes.json();
+    const insights = await insightsRes.json();
+    const subjects = await subjectsRes.json();
+    const sessions = await sessionsRes.json();
+    const targets = await targetsRes.json();
+
+    // Update stat cards
+    document.getElementById('statToday').textContent = formatMinutes(dashboard.today_study_time);
+    document.getElementById('statWeek').textContent = formatHours(dashboard.weekly_study_time);
+    document.getElementById('statMonth').textContent = formatHours(dashboard.monthly_study_time);
+    document.getElementById('statCompletion').textContent = dashboard.completion_percent + '%';
+    document.getElementById('statPending').textContent = dashboard.pending_targets;
+
+    // Study Chart
+    renderStudyChart(sessions);
+
+    // Subject Progress
+    renderSubjectProgress(subjects, dashboard);
+
+    // Insights
+    renderInsightList('leastStudied', insights.least_studied, 'total_study_time', 'min');
+    renderInsightList('neverStudied', insights.never_studied, null, null, true);
+    renderInsightList('leastRevised', insights.least_revised, 'revision_count', 'revisions');
+    
+    document.getElementById('notStudied7dBadge').textContent = insights.not_studied_7d + ' chapters';
+    const notStudied7d = insights.least_studied.filter(c => {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+      return !c.last_studied_date || c.last_studied_date < sevenDaysAgo;
+    });
+    renderInsightList('notStudiedRecent', notStudied7d.slice(0, 5), 'total_study_time', 'min', true);
+
+    // Recent Activity
+    renderRecentActivity(sessions);
+
+    // Upcoming Targets
+    renderUpcomingTargets(targets);
+
+  } catch(e) {
+    console.error('Dashboard load error:', e);
+    showToast('Failed to load dashboard data', 'error');
+  }
+}
+
+function formatMinutes(minutes) {
+  if (!minutes || minutes === 0) return '0m';
+  if (minutes < 60) return minutes + 'm';
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m > 0 ? h + 'h ' + m + 'm' : h + 'h';
+}
+
+function formatHours(minutes) {
+  if (!minutes || minutes === 0) return '0h';
+  const h = Math.round(minutes / 60 * 10) / 10;
+  return h + 'h';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return 'N/A';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderStudyChart(sessions) {
+  const container = document.getElementById('studyChart');
+  if (!sessions || sessions.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:32px;width:100%;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;opacity:0.3;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <p style="font-size:0.84rem;">No study data yet</p>
+    </div>`;
+    return;
+  }
+
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const dayMinutes = sessions
+      .filter(s => s.session_date && s.session_date.startsWith(dateStr))
+      .reduce((sum, s) => sum + s.duration_minutes, 0);
+    days.push({
+      label: d.toLocaleDateString('en-US', { weekday: 'short' }),
+      minutes: dayMinutes,
+      date: dateStr
+    });
+  }
+
+  const maxMin = Math.max(...days.map(d => d.minutes), 1);
+  
+  container.innerHTML = days.map(d => {
+    const height = Math.max((d.minutes / maxMin) * 140, d.minutes > 0 ? 8 : 2);
+    return `
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+        <span style="font-size:0.7rem;color:var(--gray-500);font-weight:600;">${formatMinutes(d.minutes)}</span>
+        <div style="width:100%;max-width:48px;height:${height}px;background:${d.minutes > 0 ? 'var(--blue)' : 'var(--gray-200)'};border-radius:4px 4px 0 0;transition:height 0.3s;" title="${d.date}: ${d.minutes} min"></div>
+        <span style="font-size:0.68rem;color:var(--gray-400);">${d.label}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+async function renderSubjectProgress(subjects, dashboard) {
+  const container = document.getElementById('subjectProgress');
+  if (!subjects || subjects.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:24px;">
+      <p style="font-size:0.84rem;">No subjects found. Add subjects in Profile.</p>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+  for (const subject of subjects) {
+    try {
+      const res = await fetch(`${API_BASE}/subjects/${subject.id}/stats`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+      });
+      const stats = await res.json();
+      html += `
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-weight:600;font-size:0.84rem;color:var(--gray-700);">${escapeHTML(subject.name)}</span>
+            <span style="font-size:0.76rem;color:var(--gray-500);">${stats.completed_chapters}/${stats.total_chapters} chapters</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__fill ${stats.completion_percent >= 80 ? 'green' : stats.completion_percent >= 40 ? 'blue' : 'yellow'}" style="width:${stats.completion_percent}%;"></div>
+          </div>
+        </div>
+      `;
+    } catch(e) {
+      html += `<div style="margin-bottom:8px;font-size:0.82rem;color:var(--gray-400);">${escapeHTML(subject.name)}</div>`;
+    }
+  }
+  container.innerHTML = html || '<p style="font-size:0.84rem;color:var(--gray-500);">No data</p>';
+}
+
+function renderInsightList(elementId, items, valueKey, unit, showZero) {
+  const container = document.getElementById(elementId);
+  if (!items || items.length === 0) {
+    container.innerHTML = `<li><div class="empty-state" style="padding:16px;"><p style="font-size:0.8rem;">No data available</p></div></li>`;
+    return;
+  }
+
+  const displayItems = showZero ? items.filter(i => {
+    if (valueKey) return i[valueKey] === 0;
+    return true;
+  }) : items;
+
+  if (displayItems.length === 0) {
+    container.innerHTML = `<li><div class="empty-state" style="padding:16px;"><p style="font-size:0.8rem;">All chapters have been studied</p></div></li>`;
+    return;
+  }
+
+  container.innerHTML = displayItems.slice(0, 5).map(item => `
+    <li>
+      <span class="insight-list__name">
+        <span style="font-size:0.72rem;color:var(--gray-400);display:block;">${escapeHTML(item.subject_name || '')} &rsaquo; ${escapeHTML(item.paper_name || '')}</span>
+        ${escapeHTML(item.name)}
+      </span>
+      <span class="insight-list__value">
+        ${valueKey ? (unit === 'min' ? formatMinutes(item[valueKey]) : item[valueKey] + ' ' + (unit || '')) : 'Never'}
+      </span>
+    </li>
+  `).join('');
+}
+
+function renderRecentActivity(sessions) {
+  const container = document.getElementById('recentActivity');
+  if (!sessions || sessions.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:24px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;opacity:0.3;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <p style="font-size:0.84rem;">No study sessions recorded yet</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Duration</th>
+            <th>Chapter ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${sessions.slice(0, 15).map(s => `
+            <tr>
+              <td>${formatDate(s.session_date)}</td>
+              <td><span class="badge ${s.session_type === 'revision' ? 'badge-blue' : s.session_type === 'practice' ? 'badge-green' : s.session_type === 'exam' ? 'badge-red' : 'badge-gray'}">${s.session_type}</span></td>
+              <td>${s.duration_minutes} min</td>
+              <td style="font-size:0.78rem;color:var(--gray-400);">Ch. ${s.chapter_id}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderUpcomingTargets(targets) {
+  const container = document.getElementById('upcomingTargets');
+  const pending = targets.filter(t => t.status === 'Pending').slice(0, 5);
+
+  if (pending.length === 0) {
+    container.innerHTML = `<div class="empty-state" style="padding:24px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;opacity:0.3;"><circle cx="12" cy="12" r="10"/></svg>
+      <p style="font-size:0.84rem;">No upcoming targets</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = pending.map(t => `
+    <div class="chapter-item">
+      <div class="chapter-item__info">
+        <div class="chapter-item__name">${escapeHTML(t.title)}</div>
+        <div class="chapter-item__meta">
+          ${t.subject_name ? `<span>${escapeHTML(t.subject_name)}</span>` : ''}
+          ${t.chapter_name ? `<span>${escapeHTML(t.chapter_name)}</span>` : ''}
+          <span class="tag">${escapeHTML(t.type)}</span>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        ${t.due_date ? `<span style="font-size:0.78rem;color:var(--red);font-weight:600;">Due: ${formatDate(t.due_date)}</span>` : '<span style="font-size:0.76rem;color:var(--gray-400);">No due date</span>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ===== INIT =====
+loadDashboard();
+loadNotifications();
+
+// Refresh dashboard every 60 seconds
+setInterval(loadDashboard, 60000);
+</script>
+</body>
+</html>
