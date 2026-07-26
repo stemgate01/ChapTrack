@@ -21,18 +21,18 @@ function error(message, status = 400) {
 // ─── Database Initialization ───────────────────────────────────
 
 async function initDB(db) {
-  // Create tables one at a time to avoid SQLite parsing issues
+  // Use prepare().run() for each statement - D1's recommended approach
   
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
-  `);
+  `).run();
 
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS subjects (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -40,9 +40,9 @@ async function initDB(db) {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
-  `);
+  `).run();
 
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS papers (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       subject_id INTEGER NOT NULL,
@@ -52,9 +52,9 @@ async function initDB(db) {
       FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
-  `);
+  `).run();
 
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS chapters (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       paper_id INTEGER NOT NULL,
@@ -77,9 +77,9 @@ async function initDB(db) {
       FOREIGN KEY (paper_id) REFERENCES papers(id) ON DELETE CASCADE,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
-  `);
+  `).run();
 
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS study_sessions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       chapter_id INTEGER NOT NULL,
@@ -91,9 +91,9 @@ async function initDB(db) {
       FOREIGN KEY (chapter_id) REFERENCES chapters(id) ON DELETE CASCADE,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
-  `);
+  `).run();
 
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS targets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -108,9 +108,9 @@ async function initDB(db) {
       FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL,
       FOREIGN KEY (chapter_id) REFERENCES chapters(id) ON DELETE SET NULL
     )
-  `);
+  `).run();
 
-  await db.exec(`
+  await db.prepare(`
     CREATE TABLE IF NOT EXISTS notifications (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -122,7 +122,7 @@ async function initDB(db) {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
-  `);
+  `).run();
 }
 // ─── Auth Middleware ────────────────────────────────────────────
 
