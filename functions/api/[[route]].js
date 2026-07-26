@@ -21,8 +21,6 @@ function error(message, status = 400) {
 // ─── Database Initialization ───────────────────────────────────
 
 async function initDB(db) {
-  // Use prepare().run() for each statement - D1's recommended approach
-  
   await db.prepare(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -124,15 +122,14 @@ async function initDB(db) {
     )
   `).run();
 }
+
 // ─── Auth Middleware ────────────────────────────────────────────
 
 async function getUserFromToken(db, request) {
   const authHeader = request.headers.get('Authorization');
   if (!authHeader) return null;
-  
   const token = authHeader.replace('Bearer ', '');
   if (!token) return null;
-
   const user = await db.prepare('SELECT id, email FROM users WHERE id = ?').bind(token).first();
   return user;
 }
@@ -148,20 +145,15 @@ async function handleRegister(db, body) {
   if (existing) return error('Email already registered', 409);
 
   const result = await db.prepare('INSERT INTO users (email, password) VALUES (?, ?)').bind(email, password).run();
-  
-  // Preload default syllabus
   await seedDefaultSyllabus(db, result.meta.last_row_id);
-
   return json({ success: true, user_id: result.meta.last_row_id, email });
 }
 
 async function handleLogin(db, body) {
   const { email, password } = body;
   if (!email || !password) return error('Email and password required');
-
   const user = await db.prepare('SELECT id, email FROM users WHERE email = ? AND password = ?').bind(email, password).first();
   if (!user) return error('Invalid credentials', 401);
-
   return json({ success: true, user_id: user.id, email: user.email });
 }
 
@@ -217,11 +209,9 @@ async function seedDefaultSyllabus(db, userId) {
   for (const [subjectName, chapters] of Object.entries(DEFAULT_SYLLABUS)) {
     const subjectResult = await db.prepare('INSERT INTO subjects (user_id, name) VALUES (?, ?)').bind(userId, subjectName).run();
     const subjectId = subjectResult.meta.last_row_id;
-
     const paperName = subjectName.includes('1st') ? '1st Paper' : '2nd Paper';
     const paperResult = await db.prepare('INSERT INTO papers (subject_id, user_id, name) VALUES (?, ?, ?)').bind(subjectId, userId, paperName).run();
     const paperId = paperResult.meta.last_row_id;
-
     for (const chapterName of chapters) {
       await db.prepare('INSERT INTO chapters (paper_id, user_id, name) VALUES (?, ?, ?)').bind(paperId, userId, chapterName).run();
     }
@@ -258,10 +248,7 @@ async function handleDeleteSubject(db, userId, id) {
 async function handleGetPapers(db, userId, subjectId) {
   let query = 'SELECT * FROM papers WHERE user_id = ?';
   const params = [userId];
-  if (subjectId) {
-    query += ' AND subject_id = ?';
-    params.push(subjectId);
-  }
+  if (subjectId) { query += ' AND subject_id = ?'; params.push(subjectId); }
   query += ' ORDER BY name';
   const papers = await db.prepare(query).bind(...params).all();
   return json(papers.results);
@@ -290,10 +277,7 @@ async function handleDeletePaper(db, userId, id) {
 async function handleGetChapters(db, userId, paperId) {
   let query = 'SELECT * FROM chapters WHERE user_id = ?';
   const params = [userId];
-  if (paperId) {
-    query += ' AND paper_id = ?';
-    params.push(paperId);
-  }
+  if (paperId) { query += ' AND paper_id = ?'; params.push(paperId); }
   query += ' ORDER BY id';
   const chapters = await db.prepare(query).bind(...params).all();
   return json(chapters.results);
@@ -313,20 +297,14 @@ async function handleCreateChapter(db, userId, body) {
 }
 
 async function handleUpdateChapter(db, userId, id, body) {
-  const allowed = ['name', 'online_class', 'short_notes', 'theory_understood', 'pyq_completed', 
+  const allowed = ['name', 'online_class', 'short_notes', 'theory_understood', 'pyq_completed',
                    'revision_count', 'practice_count', 'exam_count', 'notes', 'paper_id'];
   const updates = [];
   const params = [];
-
   for (const key of allowed) {
-    if (body[key] !== undefined) {
-      updates.push(`${key} = ?`);
-      params.push(body[key]);
-    }
+    if (body[key] !== undefined) { updates.push(`${key} = ?`); params.push(body[key]); }
   }
-
   if (updates.length === 0) return error('No fields to update');
-
   params.push(id, userId);
   await db.prepare(`UPDATE chapters SET ${updates.join(', ')} WHERE id = ? AND user_id = ?`).bind(...params).run();
   return json({ success: true });
@@ -334,6 +312,27 @@ async function handleUpdateChapter(db, userId, id, body) {
 
 async function handleDeleteChapter(db, userId, id) {
   await db.prepare('DELETE FROM chapters WHERE id = ? AND user_id = ?').bind(id, userId).run();
+  return json({ success: true });
+}
+
+// ─── Chapter Manual Correction ──────────────────────────────────
+
+async function handleCorrectChapter(db, userId, id, body) {
+  const chapter = await db.prepare('SELECT * FROM chapters WHERE id = ? AND user_id = ?').bind(id, userId).first();
+  if (!chapter) return error('Chapter not found', 404);
+
+  const updates = {};
+  const fields = ['total_study_time', 'revision_count', 'practice_count', 'exam_count',
+                  'online_class', 'short_notes', 'theory_understood', 'pyq_completed'];
+  for (const field of fields) {
+    if (body[field] !== undefined) { updates[field] = body[field]; }
+  }
+  if (Object.keys(updates).length === 0) return error('No fields to update');
+
+  const setClauses = Object.keys(updates).map(k => `${k} = ?`).join(', ');
+  const values = Object.values(updates);
+  values.push(id, userId);
+  await db.prepare(`UPDATE chapters SET ${setClauses} WHERE id = ? AND user_id = ?`).bind(...values).run();
   return json({ success: true });
 }
 
@@ -350,41 +349,94 @@ async function handleAddStudySession(db, userId, body) {
     'INSERT INTO study_sessions (chapter_id, user_id, duration_minutes, session_date, session_type) VALUES (?, ?, ?, ?, ?)'
   ).bind(chapter_id, userId, duration_minutes, sessionDate, sessionType).run();
 
-  // Update chapter totals
-  const chapter = await db.prepare('SELECT * FROM chapters WHERE id = ? AND user_id = ?').bind(chapter_id, userId).first();
-  if (chapter) {
-    const newTotal = chapter.total_study_time + duration_minutes;
-    const updates = { total_study_time: newTotal, last_studied_date: sessionDate };
-    
-    if (sessionType === 'revision') {
-      updates.revision_count = chapter.revision_count + 1;
-      updates.last_revised_date = sessionDate;
-    } else if (sessionType === 'practice') {
-      updates.practice_count = chapter.practice_count + 1;
-      updates.last_practiced_date = sessionDate;
-    } else if (sessionType === 'exam') {
-      updates.exam_count = chapter.exam_count + 1;
-      updates.last_exam_date = sessionDate;
-    }
-
-    const setClauses = Object.keys(updates).map(k => `${k} = ?`).join(', ');
-    const values = Object.values(updates);
-    await db.prepare(`UPDATE chapters SET ${setClauses} WHERE id = ? AND user_id = ?`).bind(...values, chapter_id, userId).run();
-  }
-
+  // Recalculate chapter totals
+  await recalculateChapterStats(db, userId, chapter_id);
   return json({ success: true });
 }
 
 async function handleGetStudySessions(db, userId, chapterId) {
   let query = 'SELECT * FROM study_sessions WHERE user_id = ?';
   const params = [userId];
-  if (chapterId) {
-    query += ' AND chapter_id = ?';
-    params.push(chapterId);
-  }
+  if (chapterId) { query += ' AND chapter_id = ?'; params.push(chapterId); }
   query += ' ORDER BY session_date DESC LIMIT 100';
   const sessions = await db.prepare(query).bind(...params).all();
   return json(sessions.results);
+}
+
+async function handleUpdateSession(db, userId, id, body) {
+  const session = await db.prepare('SELECT * FROM study_sessions WHERE id = ? AND user_id = ?').bind(id, userId).first();
+  if (!session) return error('Session not found', 404);
+
+  const newDuration = body.duration_minutes || session.duration_minutes;
+  const newType = body.session_type || session.session_type;
+
+  await db.prepare('UPDATE study_sessions SET duration_minutes = ?, session_type = ? WHERE id = ? AND user_id = ?')
+    .bind(newDuration, newType, id, userId).run();
+
+  await recalculateChapterStats(db, userId, session.chapter_id);
+  return json({ success: true });
+}
+
+async function handleDeleteSession(db, userId, id) {
+  const session = await db.prepare('SELECT * FROM study_sessions WHERE id = ? AND user_id = ?').bind(id, userId).first();
+  if (!session) return error('Session not found', 404);
+
+  const chapterId = session.chapter_id;
+  await db.prepare('DELETE FROM study_sessions WHERE id = ? AND user_id = ?').bind(id, userId).run();
+  await recalculateChapterStats(db, userId, chapterId);
+  return json({ success: true });
+}
+
+// ─── Recalculate Chapter Stats from Sessions ────────────────────
+
+async function recalculateChapterStats(db, userId, chapterId) {
+  const totalRes = await db.prepare(
+    'SELECT SUM(duration_minutes) as total FROM study_sessions WHERE chapter_id = ? AND user_id = ?'
+  ).bind(chapterId, userId).first();
+
+  const latestStudy = await db.prepare(
+    "SELECT session_date FROM study_sessions WHERE chapter_id = ? AND user_id = ? AND session_type = 'study' ORDER BY session_date DESC LIMIT 1"
+  ).bind(chapterId, userId).first();
+
+  const latestRevision = await db.prepare(
+    "SELECT session_date FROM study_sessions WHERE chapter_id = ? AND user_id = ? AND session_type = 'revision' ORDER BY session_date DESC LIMIT 1"
+  ).bind(chapterId, userId).first();
+
+  const latestPractice = await db.prepare(
+    "SELECT session_date FROM study_sessions WHERE chapter_id = ? AND user_id = ? AND session_type = 'practice' ORDER BY session_date DESC LIMIT 1"
+  ).bind(chapterId, userId).first();
+
+  const latestExam = await db.prepare(
+    "SELECT session_date FROM study_sessions WHERE chapter_id = ? AND user_id = ? AND session_type = 'exam' ORDER BY session_date DESC LIMIT 1"
+  ).bind(chapterId, userId).first();
+
+  const revCount = await db.prepare(
+    "SELECT COUNT(*) as cnt FROM study_sessions WHERE chapter_id = ? AND user_id = ? AND session_type = 'revision'"
+  ).bind(chapterId, userId).first();
+
+  const pracCount = await db.prepare(
+    "SELECT COUNT(*) as cnt FROM study_sessions WHERE chapter_id = ? AND user_id = ? AND session_type = 'practice'"
+  ).bind(chapterId, userId).first();
+
+  const examCount = await db.prepare(
+    "SELECT COUNT(*) as cnt FROM study_sessions WHERE chapter_id = ? AND user_id = ? AND session_type = 'exam'"
+  ).bind(chapterId, userId).first();
+
+  await db.prepare(`
+    UPDATE chapters SET 
+      total_study_time = ?, last_studied_date = ?, last_revised_date = ?,
+      last_practiced_date = ?, last_exam_date = ?,
+      revision_count = ?, practice_count = ?, exam_count = ?
+    WHERE id = ? AND user_id = ?
+  `).bind(
+    totalRes.total || 0,
+    latestStudy ? latestStudy.session_date : null,
+    latestRevision ? latestRevision.session_date : null,
+    latestPractice ? latestPractice.session_date : null,
+    latestExam ? latestExam.session_date : null,
+    revCount.cnt || 0, pracCount.cnt || 0, examCount.cnt || 0,
+    chapterId, userId
+  ).run();
 }
 
 // ─── Target Routes ──────────────────────────────────────────────
@@ -392,11 +444,9 @@ async function handleGetStudySessions(db, userId, chapterId) {
 async function handleGetTargets(db, userId) {
   const targets = await db.prepare(
     `SELECT t.*, s.name as subject_name, c.name as chapter_name 
-     FROM targets t 
-     LEFT JOIN subjects s ON t.subject_id = s.id 
+     FROM targets t LEFT JOIN subjects s ON t.subject_id = s.id 
      LEFT JOIN chapters c ON t.chapter_id = c.id 
-     WHERE t.user_id = ? 
-     ORDER BY t.due_date ASC, t.created_at DESC`
+     WHERE t.user_id = ? ORDER BY t.due_date ASC, t.created_at DESC`
   ).bind(userId).all();
   return json(targets.results);
 }
@@ -404,11 +454,9 @@ async function handleGetTargets(db, userId) {
 async function handleCreateTarget(db, userId, body) {
   const { title, subject_id, chapter_id, type, due_date } = body;
   if (!title) return error('Title required');
-  
   const result = await db.prepare(
     'INSERT INTO targets (user_id, title, subject_id, chapter_id, type, due_date) VALUES (?, ?, ?, ?, ?, ?)'
   ).bind(userId, title, subject_id || null, chapter_id || null, type || 'Study Time', due_date || null).run();
-  
   return json({ id: result.meta.last_row_id, title });
 }
 
@@ -437,11 +485,9 @@ async function handleGetNotifications(db, userId) {
 async function handleCreateNotification(db, userId, body) {
   const { title, message, scheduled_at, is_pinned } = body;
   if (!title) return error('Title required');
-  
   const result = await db.prepare(
     'INSERT INTO notifications (user_id, title, message, scheduled_at, is_pinned) VALUES (?, ?, ?, ?, ?)'
   ).bind(userId, title, message || '', scheduled_at || null, is_pinned ? 1 : 0).run();
-  
   return json({ id: result.meta.last_row_id, title });
 }
 
@@ -459,7 +505,6 @@ async function handleDeleteNotification(db, userId, id) {
 
 async function handleGetDashboard(db, userId) {
   const subjects = await db.prepare('SELECT * FROM subjects WHERE user_id = ?').bind(userId).all();
-  const papers = await db.prepare('SELECT * FROM papers WHERE user_id = ?').bind(userId).all();
   const chapters = await db.prepare('SELECT * FROM chapters WHERE user_id = ?').bind(userId).all();
   const sessions = await db.prepare(
     "SELECT * FROM study_sessions WHERE user_id = ? AND session_date >= date('now', '-30 days') ORDER BY session_date DESC"
@@ -478,11 +523,11 @@ async function handleGetDashboard(db, userId) {
   }
 
   const totalChapters = chapters.results.length;
-  const startedChapters = chapters.results.filter(c => 
-    c.online_class || c.short_notes || c.theory_understood || c.pyq_completed || 
+  const startedChapters = chapters.results.filter(c =>
+    c.online_class || c.short_notes || c.theory_understood || c.pyq_completed ||
     c.total_study_time > 0 || c.revision_count > 0 || c.practice_count > 0 || c.exam_count > 0
   ).length;
-  const completedChapters = chapters.results.filter(c => 
+  const completedChapters = chapters.results.filter(c =>
     c.online_class && c.short_notes && c.theory_understood && c.pyq_completed && c.revision_count >= 2
   ).length;
 
@@ -502,7 +547,11 @@ async function handleGetDashboard(db, userId) {
 }
 
 async function handleGetInsights(db, userId) {
-  const chapters = await db.prepare('SELECT c.*, p.name as paper_name, s.name as subject_name FROM chapters c JOIN papers p ON c.paper_id = p.id JOIN subjects s ON p.subject_id = s.id WHERE c.user_id = ?').bind(userId).all();
+  const chapters = await db.prepare(
+    `SELECT c.*, p.name as paper_name, s.name as subject_name 
+     FROM chapters c JOIN papers p ON c.paper_id = p.id 
+     JOIN subjects s ON p.subject_id = s.id WHERE c.user_id = ?`
+  ).bind(userId).all();
   const chaps = chapters.results;
 
   const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString();
@@ -525,13 +574,13 @@ async function handleGetInsights(db, userId) {
 
   return json({
     least_studied: sortedByStudy.slice(0, 5),
-    most_studied: sortedByStudy.reverse().slice(0, 5),
+    most_studied: [...sortedByStudy].reverse().slice(0, 5),
     least_revised: sortedByRevision.slice(0, 5),
-    most_revised: sortedByRevision.reverse().slice(0, 5),
+    most_revised: [...sortedByRevision].reverse().slice(0, 5),
     least_practiced: sortedByPractice.slice(0, 5),
-    most_practiced: sortedByPractice.reverse().slice(0, 5),
+    most_practiced: [...sortedByPractice].reverse().slice(0, 5),
     least_tested: sortedByExam.slice(0, 5),
-    most_tested: sortedByExam.reverse().slice(0, 5),
+    most_tested: [...sortedByExam].reverse().slice(0, 5),
     never_studied: neverStudied.slice(0, 10),
     never_revised: neverRevised.slice(0, 10),
     never_practiced: neverPracticed.slice(0, 10),
@@ -565,19 +614,10 @@ async function handleGetSubjectStats(db, userId, subjectId) {
   const totalExams = allChapters.reduce((s, c) => s + c.exam_count, 0);
 
   return json({
-    subject: subject,
-    total_chapters: total,
-    started_chapters: started,
-    completed_chapters: completed,
+    subject, total_chapters: total, started_chapters: started, completed_chapters: completed,
     completion_percent: total > 0 ? Math.round((completed / total) * 100) : 0,
-    total_study_time: totalTime,
-    total_revisions: totalRevisions,
-    total_practice: totalPractice,
-    total_exams: totalExams,
-    papers: papers.results.map(p => ({
-      ...p,
-      chapter_count: allChapters.filter(c => c.paper_id === p.id).length
-    }))
+    total_study_time: totalTime, total_revisions: totalRevisions, total_practice: totalPractice, total_exams: totalExams,
+    papers: papers.results.map(p => ({ ...p, chapter_count: allChapters.filter(c => c.paper_id === p.id).length }))
   });
 }
 
@@ -589,12 +629,10 @@ async function handleExportData(db, userId, format) {
   const chapters = await db.prepare('SELECT * FROM chapters WHERE user_id = ?').bind(userId).all();
   const sessions = await db.prepare('SELECT * FROM study_sessions WHERE user_id = ?').bind(userId).all();
   const targets = await db.prepare('SELECT * FROM targets WHERE user_id = ?').bind(userId).all();
-
   const data = { subjects: subjects.results, papers: papers.results, chapters: chapters.results, sessions: sessions.results, targets: targets.results };
 
   if (format === 'txt') {
-    let txt = 'CHAPTRACK DATA EXPORT\n====================\n\n';
-    txt += 'SUBJECTS:\n---------\n';
+    let txt = 'CHAPTRACK DATA EXPORT\n====================\n\nSUBJECTS:\n---------\n';
     for (const s of subjects.results) txt += `  - ${s.name}\n`;
     txt += '\nCHAPTERS:\n---------\n';
     for (const c of chapters.results) txt += `  - ${c.name} | Study: ${c.total_study_time}min | Rev: ${c.revision_count} | Prac: ${c.practice_count} | Exam: ${c.exam_count}\n`;
@@ -602,7 +640,6 @@ async function handleExportData(db, userId, format) {
     for (const t of targets.results) txt += `  - [${t.status}] ${t.title}\n`;
     return new Response(txt, { headers: { 'Content-Type': 'text/plain', ...corsHeaders } });
   }
-
   return json(data);
 }
 
@@ -613,8 +650,7 @@ async function handleSearch(db, userId, query) {
   const subjects = await db.prepare('SELECT * FROM subjects WHERE user_id = ? AND name LIKE ?').bind(userId, q).all();
   const chapters = await db.prepare(
     `SELECT c.*, p.name as paper_name, s.name as subject_name 
-     FROM chapters c 
-     JOIN papers p ON c.paper_id = p.id 
+     FROM chapters c JOIN papers p ON c.paper_id = p.id 
      JOIN subjects s ON p.subject_id = s.id 
      WHERE c.user_id = ? AND c.name LIKE ?`
   ).bind(userId, q).all();
@@ -629,7 +665,6 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const path = url.pathname.replace('/api/', '');
 
-  // Handle CORS preflight
   if (request.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -653,42 +688,47 @@ export async function onRequest(context) {
     // Subjects
     if (request.method === 'GET' && path === 'subjects') return handleGetSubjects(db, userId);
     if (request.method === 'POST' && path === 'subjects') return handleCreateSubject(db, userId, await request.json());
-    if (request.method === 'PUT' && path.match(/^subjects\/(\d+)$/)) return handleUpdateSubject(db, userId, path.match(/^subjects\/(\d+)$/)[1], await request.json());
-    if (request.method === 'DELETE' && path.match(/^subjects\/(\d+)$/)) return handleDeleteSubject(db, userId, path.match(/^subjects\/(\d+)$/)[1]);
+    if (request.method === 'PUT' && path.match(/^subjects\/(\d+)$/)) return handleUpdateSubject(db, userId, parseInt(path.match(/^subjects\/(\d+)$/)[1]), await request.json());
+    if (request.method === 'DELETE' && path.match(/^subjects\/(\d+)$/)) return handleDeleteSubject(db, userId, parseInt(path.match(/^subjects\/(\d+)$/)[1]));
 
     // Papers
     if (request.method === 'GET' && path === 'papers') return handleGetPapers(db, userId, url.searchParams.get('subject_id'));
     if (request.method === 'POST' && path === 'papers') return handleCreatePaper(db, userId, await request.json());
-    if (request.method === 'PUT' && path.match(/^papers\/(\d+)$/)) return handleUpdatePaper(db, userId, path.match(/^papers\/(\d+)$/)[1], await request.json());
-    if (request.method === 'DELETE' && path.match(/^papers\/(\d+)$/)) return handleDeletePaper(db, userId, path.match(/^papers\/(\d+)$/)[1]);
+    if (request.method === 'PUT' && path.match(/^papers\/(\d+)$/)) return handleUpdatePaper(db, userId, parseInt(path.match(/^papers\/(\d+)$/)[1]), await request.json());
+    if (request.method === 'DELETE' && path.match(/^papers\/(\d+)$/)) return handleDeletePaper(db, userId, parseInt(path.match(/^papers\/(\d+)$/)[1]));
 
     // Chapters
     if (request.method === 'GET' && path === 'chapters') return handleGetChapters(db, userId, url.searchParams.get('paper_id'));
-    if (request.method === 'GET' && path.match(/^chapters\/(\d+)$/)) return handleGetChapter(db, userId, path.match(/^chapters\/(\d+)$/)[1]);
+    if (request.method === 'GET' && path.match(/^chapters\/(\d+)$/)) return handleGetChapter(db, userId, parseInt(path.match(/^chapters\/(\d+)$/)[1]));
     if (request.method === 'POST' && path === 'chapters') return handleCreateChapter(db, userId, await request.json());
-    if (request.method === 'PUT' && path.match(/^chapters\/(\d+)$/)) return handleUpdateChapter(db, userId, path.match(/^chapters\/(\d+)$/)[1], await request.json());
-    if (request.method === 'DELETE' && path.match(/^chapters\/(\d+)$/)) return handleDeleteChapter(db, userId, path.match(/^chapters\/(\d+)$/)[1]);
+    if (request.method === 'PUT' && path.match(/^chapters\/(\d+)$/)) return handleUpdateChapter(db, userId, parseInt(path.match(/^chapters\/(\d+)$/)[1]), await request.json());
+    if (request.method === 'DELETE' && path.match(/^chapters\/(\d+)$/)) return handleDeleteChapter(db, userId, parseInt(path.match(/^chapters\/(\d+)$/)[1]));
+
+    // Chapter Manual Correction
+    if (request.method === 'PUT' && path.match(/^chapters\/(\d+)\/correct$/)) return handleCorrectChapter(db, userId, parseInt(path.match(/^chapters\/(\d+)\/correct$/)[1]), await request.json());
 
     // Study Sessions
     if (request.method === 'GET' && path === 'sessions') return handleGetStudySessions(db, userId, url.searchParams.get('chapter_id'));
     if (request.method === 'POST' && path === 'sessions') return handleAddStudySession(db, userId, await request.json());
+    if (request.method === 'PUT' && path.match(/^sessions\/(\d+)$/)) return handleUpdateSession(db, userId, parseInt(path.match(/^sessions\/(\d+)$/)[1]), await request.json());
+    if (request.method === 'DELETE' && path.match(/^sessions\/(\d+)$/)) return handleDeleteSession(db, userId, parseInt(path.match(/^sessions\/(\d+)$/)[1]));
 
     // Targets
     if (request.method === 'GET' && path === 'targets') return handleGetTargets(db, userId);
     if (request.method === 'POST' && path === 'targets') return handleCreateTarget(db, userId, await request.json());
-    if (request.method === 'PUT' && path.match(/^targets\/(\d+)$/)) return handleUpdateTarget(db, userId, path.match(/^targets\/(\d+)$/)[1], await request.json());
-    if (request.method === 'DELETE' && path.match(/^targets\/(\d+)$/)) return handleDeleteTarget(db, userId, path.match(/^targets\/(\d+)$/)[1]);
+    if (request.method === 'PUT' && path.match(/^targets\/(\d+)$/)) return handleUpdateTarget(db, userId, parseInt(path.match(/^targets\/(\d+)$/)[1]), await request.json());
+    if (request.method === 'DELETE' && path.match(/^targets\/(\d+)$/)) return handleDeleteTarget(db, userId, parseInt(path.match(/^targets\/(\d+)$/)[1]));
 
     // Notifications
     if (request.method === 'GET' && path === 'notifications') return handleGetNotifications(db, userId);
     if (request.method === 'POST' && path === 'notifications') return handleCreateNotification(db, userId, await request.json());
-    if (request.method === 'PUT' && path.match(/^notifications\/(\d+)\/read$/)) return handleMarkNotificationRead(db, userId, path.match(/^notifications\/(\d+)\/read$/)[1]);
-    if (request.method === 'DELETE' && path.match(/^notifications\/(\d+)$/)) return handleDeleteNotification(db, userId, path.match(/^notifications\/(\d+)$/)[1]);
+    if (request.method === 'PUT' && path.match(/^notifications\/(\d+)\/read$/)) return handleMarkNotificationRead(db, userId, parseInt(path.match(/^notifications\/(\d+)\/read$/)[1]));
+    if (request.method === 'DELETE' && path.match(/^notifications\/(\d+)$/)) return handleDeleteNotification(db, userId, parseInt(path.match(/^notifications\/(\d+)$/)[1]));
 
     // Dashboard & Insights
     if (request.method === 'GET' && path === 'dashboard') return handleGetDashboard(db, userId);
     if (request.method === 'GET' && path === 'insights') return handleGetInsights(db, userId);
-    if (request.method === 'GET' && path.match(/^subjects\/(\d+)\/stats$/)) return handleGetSubjectStats(db, userId, path.match(/^subjects\/(\d+)\/stats$/)[1]);
+    if (request.method === 'GET' && path.match(/^subjects\/(\d+)\/stats$/)) return handleGetSubjectStats(db, userId, parseInt(path.match(/^subjects\/(\d+)\/stats$/)[1]));
 
     // Search
     if (request.method === 'GET' && path === 'search') return handleSearch(db, userId, url.searchParams.get('q'));
@@ -699,6 +739,7 @@ export async function onRequest(context) {
     return error('Route not found', 404);
 
   } catch (e) {
+    console.error('API Error:', e.message);
     return error(e.message, 500);
   }
 }
