@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="ChapTrack - Profile, Syllabus Management & Settings" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="HandheldFriendly" content="true" />
+  <title>ChapTrack | Profile & Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+Pro:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="usa-overlay" id="overlay"></div>
+
+<header class="usa-header" id="header">
+  <div class="usa-navbar">
+    <div class="usa-logo">
+      <a href="/index.html" style="display:flex;align-items:center;text-decoration:none;color:white;">
+        <svg viewBox="0 0 40 40" fill="none" style="width:36px;height:36px;margin-right:8px;">
+          <rect x="2" y="4" width="36" height="32" rx="3" fill="white" opacity="0.95"/>
+          <rect x="6" y="8" width="12" height="10" rx="1.5" fill="#1a2744"/>
+          <rect x="20" y="8" width="12" height="10" rx="1.5" fill="#005ea2"/>
+          <rect x="6" y="21" width="12" height="10" rx="1.5" fill="#2e8540"/>
+          <rect x="20" y="21" width="12" height="10" rx="1.5" fill="#e66f00"/>
+        </svg>
+        <span style="font-family:'Source Serif Pro',serif;font-size:1.2rem;font-weight:700;">ChapTrack</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <nav class="usa-nav">
+        <ul class="usa-nav__primary">
+          <li><a href="/index.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a></li>
+          <li><a href="/study.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Study</a></li>
+          <li><a href="/targets.html" class="usa-nav__link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Targets</a></li>
+          <li><a href="/profile.html" class="usa-nav__link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a></li>
+        </ul>
+      </nav>
+      <div style="position:relative;">
+        <button class="notification-bell" id="notifBell" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notification-badge" id="notifBadge" style="display:none;">0</span>
+        </button>
+        <div class="notification-dropdown" id="notifDropdown">
+          <div class="notification-dropdown__header"><span>Notifications</span></div>
+          <div class="notification-dropdown__list" id="notifList"></div>
+        </div>
+      </div>
+      <button class="mobile-btn" id="mobileBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+    <a href="/study.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Study</a>
+    <a href="/targets.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Targets</a>
+    <a href="/profile.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
+  </div>
+</header>
+
+<main class="main-content">
+
+  <h1 class="section-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Profile & Settings
+  </h1>
+
+  <!-- User Info -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-header">
+      <span>Account</span>
+    </div>
+    <div class="card-body">
+      <p style="margin-bottom:8px;"><strong>Email:</strong> <span id="profileEmail">-</span></p>
+      <p style="margin-bottom:16px;"><strong>User ID:</strong> <span id="profileId">-</span></p>
+      <button class="btn btn-danger btn-sm" onclick="logout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </button>
+    </div>
+  </div>
+
+  <!-- Syllabus Management -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-header">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:6px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Syllabus Management
+      </span>
+      <button class="btn btn-sm btn-primary" onclick="openAddSubject()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Subject
+      </button>
+    </div>
+    <div class="card-body" style="padding:0;" id="syllabusList">
+      <div class="empty-state" style="padding:32px;"><p>Loading syllabus...</p></div>
+    </div>
+  </div>
+
+  <!-- Backup & Export -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-header">
+      <span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Backup & Export
+      </span>
+    </div>
+    <div class="card-body">
+      <p style="font-size:0.88rem;color:var(--gray-500);margin-bottom:16px;">Export all your study data. Generated instantly.</p>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="exportData('json')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export JSON
+        </button>
+        <button class="btn btn-secondary" onclick="exportData('txt')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export TXT
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Subject Modal -->
+  <div class="modal-overlay" id="subjectModal">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal-header">
+        <span id="subjectModalTitle">Add Subject</span>
+        <button class="modal-close" onclick="closeModal('subjectModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editSubjectId">
+        <div class="form-group">
+          <label class="form-label">Subject Name</label>
+          <input class="form-input" id="subjectName" placeholder="e.g., Physics 1st Paper">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('subjectModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSubject()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Paper Modal -->
+  <div class="modal-overlay" id="paperModal">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal-header">
+        <span id="paperModalTitle">Add Paper</span>
+        <button class="modal-close" onclick="closeModal('paperModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editPaperId">
+        <input type="hidden" id="paperSubjectId">
+        <div class="form-group">
+          <label class="form-label">Paper Name</label>
+          <input class="form-input" id="paperName" placeholder="e.g., 1st Paper">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('paperModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="savePaper()">Save</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="usa-footer">
+  <div class="usa-footer__primary-section">
+    <div class="usa-footer__inner">
+      <div class="footer-logo">
+        <svg viewBox="0 0 64 64" fill="none" style="width:56px;height:56px;">
+          <rect x="3" y="6" width="58" height="52" rx="4" fill="white" opacity="0.9"/>
+          <rect x="9" y="12" width="20" height="18" rx="2" fill="#1a2744"/>
+          <rect x="33" y="12" width="20" height="18" rx="2" fill="#005ea2"/>
+          <rect x="9" y="34" width="20" height="18" rx="2" fill="#2e8540"/>
+          <rect x="33" y="34" width="20" height="18" rx="2" fill="#e66f00"/>
+        </svg>
+      </div>
+      <div class="footer-grid">
+        <div class="footer-column">
+          <h3>ChapTrack</h3>
+          <ul><li><a href="/index.html">Dashboard</a></li><li><a href="/study.html">Study Tracker</a></li><li><a href="/targets.html">Targets</a></li><li><a href="/profile.html">Profile</a></li></ul>
+        </div>
+        <div class="footer-column">
+          <h3>Features</h3>
+          <ul><li><a href="/study.html">Chapter Tracking</a></li><li><a href="/targets.html">Target System</a></li><li><a href="/profile.html">Syllabus</a></li><li><a href="/profile.html">Export</a></li></ul>
+        </div>
+        <div class="footer-column">
+          <h3>Subjects</h3>
+          <ul><li><a href="/study.html">Physics</a></li><li><a href="/study.html">Chemistry</a></li><li><a href="/study.html">Mathematics</a></li><li><a href="/study.html">Biology</a></li></ul>
+        </div>
+        <div class="footer-column">
+          <h3>About</h3>
+          <ul><li><a href="#">Help</a></li><li><a href="/profile.html">Backup</a></li><li><a href="#">Privacy</a></li></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-footer__secondary-section">
+    <p>ChapTrack &mdash; Chapter-Based Personal Study Tracker. Built for HSC students.</p>
+  </div>
+  <div class="return-to-top">
+    <a href="#header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg> Return to top</a>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const API_BASE = '/api';
+function getToken() { return localStorage.getItem('chaptrack_token'); }
+function getUser() { try { return JSON.parse(localStorage.getItem('chaptrack_user')); } catch(e) { return null; } }
+
+const user = getUser();
+if (!user || !getToken()) { window.location.href = '/auth.html'; }
+
+document.getElementById('profileEmail').textContent = user.email;
+document.getElementById('profileId').textContent = user.id;
+
+function showToast(msg, type = '') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); document.getElementById('overlay').classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
+document.getElementById('overlay').addEventListener('click', () => {
+  document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  document.getElementById('overlay').classList.remove('active');
+  document.getElementById('notifDropdown').classList.remove('active');
+});
+
+document.getElementById('mobileBtn').addEventListener('click', () => document.getElementById('mobileMenu').classList.toggle('active'));
+
+function escapeHTML(s) { const div = document.createElement('div'); div.textContent = s || ''; return div.innerHTML; }
+
+function logout() {
+  localStorage.removeItem('chaptrack_user');
+  localStorage.removeItem('chaptrack_token');
+  window.location.href = '/auth.html';
+}
+
+async function loadNotifications() {
+  try {
+    const res = await fetch(`${API_BASE}/notifications`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    const data = await res.json();
+    const badge = document.getElementById('notifBadge');
+    const unread = data.filter(n => !n.is_read).length;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+    badge.textContent = unread;
+  } catch(e) {}
+}
+
+// ===== SYLLABUS MANAGEMENT =====
+async function loadSyllabus() {
+  try {
+    const res = await fetch(`${API_BASE}/subjects`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    const subjects = await res.json();
+    const container = document.getElementById('syllabusList');
+
+    if (!subjects || subjects.length === 0) {
+      container.innerHTML = `<div class="empty-state" style="padding:32px;"><p>No subjects. Add your first subject to get started.</p></div>`;
+      return;
+    }
+
+    container.innerHTML = subjects.map(s => `
+      <div style="border-bottom:1px solid var(--gray-200);">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;">
+          <div style="font-weight:600;font-size:0.92rem;color:var(--gray-800);">${escapeHTML(s.name)}</div>
+          <div style="display:flex;gap:4px;">
+            <button class="btn btn-xs btn-secondary" onclick="openAddPaper(${s.id})" title="Add Paper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+            <button class="btn btn-xs btn-secondary" onclick="editSubject(${s.id}, '${escapeHTML(s.name).replace(/'/g, "\\'")}')" title="Edit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+            <button class="btn btn-xs btn-danger" onclick="deleteSubject(${s.id})" title="Delete">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="papers-${s.id}" style="padding:0 16px 8px 24px;font-size:0.84rem;color:var(--gray-500);">Loading papers...</div>
+      </div>
+    `).join('');
+
+    // Load papers for each subject
+    for (const s of subjects) {
+      loadPapersForSubject(s.id);
+    }
+  } catch(e) {
+    document.getElementById('syllabusList').innerHTML = '<div class="empty-state"><p>Failed to load syllabus</p></div>';
+  }
+}
+
+async function loadPapersForSubject(subjectId) {
+  try {
+    const res = await fetch(`${API_BASE}/papers?subject_id=${subjectId}`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    const papers = await res.json();
+    const container = document.getElementById('papers-' + subjectId);
+    if (papers.length === 0) {
+      container.innerHTML = '<span style="font-style:italic;">No papers yet</span>';
+    } else {
+      container.innerHTML = papers.map(p => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;">
+          <span>${escapeHTML(p.name)}</span>
+          <span style="display:flex;gap:4px;">
+            <button class="btn btn-xs btn-secondary" onclick="editPaper(${p.id}, '${escapeHTML(p.name).replace(/'/g, "\\'")}', ${subjectId})">Edit</button>
+            <button class="btn btn-xs btn-danger" onclick="deletePaper(${p.id})">Del</button>
+          </span>
+        </div>
+      `).join('');
+    }
+  } catch(e) {
+    document.getElementById('papers-' + subjectId).textContent = 'Error loading';
+  }
+}
+
+// Subject CRUD
+function openAddSubject() {
+  document.getElementById('editSubjectId').value = '';
+  document.getElementById('subjectName').value = '';
+  document.getElementById('subjectModalTitle').textContent = 'Add Subject';
+  openModal('subjectModal');
+}
+
+function editSubject(id, name) {
+  document.getElementById('editSubjectId').value = id;
+  document.getElementById('subjectName').value = name;
+  document.getElementById('subjectModalTitle').textContent = 'Edit Subject';
+  openModal('subjectModal');
+}
+
+async function saveSubject() {
+  const id = document.getElementById('editSubjectId').value;
+  const name = document.getElementById('subjectName').value.trim();
+  if (!name) return showToast('Subject name required', 'error');
+  try {
+    if (id) {
+      await fetch(`${API_BASE}/subjects/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify({ name }) });
+    } else {
+      await fetch(`${API_BASE}/subjects`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify({ name }) });
+    }
+    closeModal('subjectModal');
+    showToast('Subject saved', 'success');
+    loadSyllabus();
+  } catch(e) { showToast('Failed to save', 'error'); }
+}
+
+async function deleteSubject(id) {
+  if (!confirm('Delete this subject and all its papers, chapters, and study data?')) return;
+  try {
+    await fetch(`${API_BASE}/subjects/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${getToken()}` } });
+    showToast('Subject deleted', 'success');
+    loadSyllabus();
+  } catch(e) { showToast('Failed to delete', 'error'); }
+}
+
+// Paper CRUD
+function openAddPaper(subjectId) {
+  document.getElementById('editPaperId').value = '';
+  document.getElementById('paperSubjectId').value = subjectId;
+  document.getElementById('paperName').value = '';
+  document.getElementById('paperModalTitle').textContent = 'Add Paper';
+  openModal('paperModal');
+}
+
+function editPaper(id, name, subjectId) {
+  document.getElementById('editPaperId').value = id;
+  document.getElementById('paperSubjectId').value = subjectId;
+  document.getElementById('paperName').value = name;
+  document.getElementById('paperModalTitle').textContent = 'Edit Paper';
+  openModal('paperModal');
+}
+
+async function savePaper() {
+  const id = document.getElementById('editPaperId').value;
+  const subjectId = document.getElementById('paperSubjectId').value;
+  const name = document.getElementById('paperName').value.trim();
+  if (!name) return showToast('Paper name required', 'error');
+  try {
+    if (id) {
+      await fetch(`${API_BASE}/papers/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify({ name, subject_id: parseInt(subjectId) }) });
+    } else {
+      await fetch(`${API_BASE}/papers`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` }, body: JSON.stringify({ name, subject_id: parseInt(subjectId) }) });
+    }
+    closeModal('paperModal');
+    showToast('Paper saved', 'success');
+    loadSyllabus();
+  } catch(e) { showToast('Failed to save', 'error'); }
+}
+
+async function deletePaper(id) {
+  if (!confirm('Delete this paper and all its chapters?')) return;
+  try {
+    await fetch(`${API_BASE}/papers/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${getToken()}` } });
+    showToast('Paper deleted', 'success');
+    loadSyllabus();
+  } catch(e) { showToast('Failed to delete', 'error'); }
+}
+
+// ===== EXPORT =====
+async function exportData(format) {
+  try {
+    const res = await fetch(`${API_BASE}/export?format=${format}`, { headers: { 'Authorization': `Bearer ${getToken()}` } });
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chaptrack_export_${new Date().toISOString().split('T')[0]}.${format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('Data exported successfully', 'success');
+  } catch(e) {
+    showToast('Export failed', 'error');
+  }
+}
+
+// ===== INIT =====
+loadSyllabus();
+loadNotifications();
+</script>
+</body>
+</html>
